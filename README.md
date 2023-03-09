@@ -1,1 +1,5 @@
-Oi, meu nome é João
+# Student
+João Guimarães
+
+# RA
+260542  
