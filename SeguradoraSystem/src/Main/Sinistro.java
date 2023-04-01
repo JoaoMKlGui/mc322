@@ -1,6 +1,6 @@
 package Main;
 import java.util.Random;
-import Clientes.Cliente;;
+import Clientes.Cliente;
 
 public class Sinistro {
     final private int id = geradorID();

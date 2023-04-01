@@ -69,7 +69,43 @@ public class Seguradora {
         }
 
         return false; //caso retorne false significa que o cliente não existe na base de dados
-    }   
+    }
+    
+    public ArrayList<Cliente> listarClientesPorGenero(String tipoGenero) { 
+        ArrayList<Cliente> listaFiltrada = new ArrayList<Cliente>(); 
+
+        for (Cliente cliente : listaClientes) {
+            if (cliente.getGenero().equals(tipoGenero)) {
+                listaFiltrada.add(cliente);
+            }
+        }
+
+        return listaFiltrada;
+    }
+
+    public ArrayList<Cliente> listarClientesPorClasseEco(String tipoClasseEco) { 
+        ArrayList<Cliente> listaFiltrada = new ArrayList<Cliente>(); 
+
+        for (Cliente cliente : listaClientes) {
+            if (cliente.getClasseEco().equals(tipoClasseEco)) {
+                listaFiltrada.add(cliente);
+            }
+        }
+
+        return listaFiltrada;
+    }
+
+    public ArrayList<Cliente> listarClientesPorEducacao(String tipoEducacao) { 
+        ArrayList<Cliente> listaFiltrada = new ArrayList<Cliente>(); 
+
+        for (Cliente cliente : listaClientes) {
+            if (cliente.getEducacao().equals(tipoEducacao)) {
+                listaFiltrada.add(cliente);
+            }
+        }
+
+        return listaFiltrada;
+    }
     
     public boolean gerarSinistro(String data, String endereco, Seguradora seguradora, Veiculo veiculo, Cliente cliente) {
         Sinistro novoSinistro = new Sinistro(data, endereco, seguradora, veiculo, cliente);
@@ -87,6 +123,7 @@ public class Seguradora {
             }
         }
 
+        System.out.println("Não existe nenhum sinistro no nome de " + nomeCliente);
         return false; //não existe nenhum sinistro no nome do cliente passado e, portanto, nada foi visualizado
     }
 

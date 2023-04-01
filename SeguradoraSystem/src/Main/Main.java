@@ -5,7 +5,7 @@ import Clientes.*;
 
 public class Main {
     public static void main(String[] args) {
-        
+
         Calendar dataLicenca = Calendar.getInstance();
         Calendar dataNascimento = Calendar.getInstance();
 
