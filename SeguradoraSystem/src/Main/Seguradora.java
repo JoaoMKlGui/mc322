@@ -1,6 +1,7 @@
 package Main;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
-
 import Clientes.Cliente;
 
 public class Seguradora {
@@ -8,8 +9,8 @@ public class Seguradora {
     private String telefone;
     private String email;
     private String endereco;
-    private ArrayList<Sinistro> listaSinistros = new ArrayList<Sinistro>();
-    private ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
+    private Map<Integer, Sinistro> listaSinistros = new HashMap<Integer, Sinistro>(); //a chave do HashMap será o ID do sinistro 
+    private Map<String, Cliente> listaClientes = new HashMap<String, Cliente>(); //a chave deste map será o nome do cliente
 
     public Seguradora(String nome, String telefone, String email, String endereco) {
         this.setNome(nome);
@@ -51,30 +52,33 @@ public class Seguradora {
     }
 
     public boolean cadastrarCliente(Cliente cliente) {
-        if(listaClientes.contains(cliente)) {
+        if(listaClientes.containsKey(cliente.getNome())) {
+
+            System.out.println("O cliente já existe na base de dados!");
             return false; //o cliente já existe na base de dados e não faz sentido adicioná-lo nela
         }
 
-        listaClientes.add(cliente); //cliente ainda não existia e foi adicionado à base de dados com sucesso
+        listaClientes.put(cliente.getNome(), cliente); //cliente ainda não existia e foi adicionado à base de dados com sucesso
+        System.out.println("Cliente adicionado com sucesso!");
         return true;
     }
 
     public boolean removerCliente(String nomeCliente) {
-        //iteração pela lista de clientes para encontrar o 
-        for(Cliente cliente : listaClientes) {
-            if (cliente.getNome().equals(nomeCliente)) {
-                listaClientes.remove(cliente);
-                return true; //o client existe e foi removido
-            }
-        }
-
-        return false; //caso retorne false significa que o cliente não existe na base de dados
+        if (listaClientes.containsKey(nomeCliente)) {
+            listaClientes.remove(nomeCliente);
+            
+            System.out.println("Cliente removido da base de dados com sucesso!");
+            return true;
+        } 
+        
+        System.out.println("O cliente não existe na base de dados!");
+        return false; 
     }
     
     public ArrayList<Cliente> listarClientesPorGenero(String tipoGenero) { 
         ArrayList<Cliente> listaFiltrada = new ArrayList<Cliente>(); 
 
-        for (Cliente cliente : listaClientes) {
+        for (Cliente cliente : listaClientes.values()) {
             if (cliente.getGenero().equals(tipoGenero)) {
                 listaFiltrada.add(cliente);
             }
@@ -86,7 +90,7 @@ public class Seguradora {
     public ArrayList<Cliente> listarClientesPorClasseEco(String tipoClasseEco) { 
         ArrayList<Cliente> listaFiltrada = new ArrayList<Cliente>(); 
 
-        for (Cliente cliente : listaClientes) {
+        for (Cliente cliente : listaClientes.values()) {
             if (cliente.getClasseEco().equals(tipoClasseEco)) {
                 listaFiltrada.add(cliente);
             }
@@ -98,7 +102,7 @@ public class Seguradora {
     public ArrayList<Cliente> listarClientesPorEducacao(String tipoEducacao) { 
         ArrayList<Cliente> listaFiltrada = new ArrayList<Cliente>(); 
 
-        for (Cliente cliente : listaClientes) {
+        for (Cliente cliente : listaClientes.values()) {
             if (cliente.getEducacao().equals(tipoEducacao)) {
                 listaFiltrada.add(cliente);
             }
@@ -109,14 +113,15 @@ public class Seguradora {
     
     public boolean gerarSinistro(String data, String endereco, Seguradora seguradora, Veiculo veiculo, Cliente cliente) {
         Sinistro novoSinistro = new Sinistro(data, endereco, seguradora, veiculo, cliente);
-        listaSinistros.add(novoSinistro); //adicionando o novo sinistro gerado à lista de sinistros da seguradora
+
+        listaSinistros.put(novoSinistro.getID(), novoSinistro); //adicionando o novo sinistro gerado à lista de sinistros da seguradora
 
         return true;
     }
 
     public boolean visualizarSinistro(String nomeCliente) {
         
-        for(Sinistro sinistro : listaSinistros) {
+        for(Sinistro sinistro : listaSinistros.values()) {
             if (sinistro.getCliente().getNome().equals(nomeCliente)) {
                 System.out.println(sinistro.toString()); //existe um sinistro no nome do cliente passado e esse sinistro foi visualizado com sucesso
                 return true;
@@ -128,6 +133,12 @@ public class Seguradora {
     }
 
     public ArrayList<Sinistro> listarSinistros() {
-        return this.listaSinistros;
+        ArrayList<Sinistro> novaListaSinistros = new ArrayList<Sinistro>();
+        
+        for(Sinistro sinistro : listaSinistros.values()) {
+            novaListaSinistros.add(sinistro);
+        }
+
+        return novaListaSinistros;
     }
 }
