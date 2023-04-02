@@ -10,7 +10,7 @@ public class Cliente {
     private String educacao;
     private String genero;
     private String classeEconomica;
-    private ArrayList<Veiculo> listaVeiculos;
+    private ArrayList<Veiculo> listaVeiculos = new ArrayList<Veiculo>();
 
     public Cliente(String nome, String endereco, Calendar dataLicenca, String educacao, String genero, String classeEconomica) {
         this.setNome(nome);
@@ -76,6 +76,11 @@ public class Cliente {
         }
 
         return veiculos;
+    }
+
+    public void adicionarVeiculo(Veiculo novoVeiculo) {
+        listaVeiculos.add(novoVeiculo);
+        System.out.println("Novo veículo adicionado com sucesso!");
     }
 
     @Override

@@ -46,6 +46,6 @@ public class Veiculo {
 
     @Override
     public String toString() {
-        return "Placa: " + this.placa + "\n" + "Marca: " + this.placa + "\n" + "Modelo: " + this.modelo + "\n" + "Ano de Fabricação: " + String.valueOf(this.anoFabricacao) + "\n";
+        return "Placa: " + this.placa + "\n" + "Marca: " + this.marca + "\n" + "Modelo: " + this.modelo + "\n" + "Ano de Fabricação: " + String.valueOf(this.anoFabricacao) + "\n";
     }
 }

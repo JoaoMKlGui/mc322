@@ -74,6 +74,15 @@ public class Seguradora {
         System.out.println("O cliente não existe na base de dados!");
         return false; 
     }
+
+    public ArrayList<Cliente> listarClientes() {
+        ArrayList<Cliente> novaListaClientes = new ArrayList<Cliente>();
+        for(Cliente cliente : listaClientes.values()) {
+            novaListaClientes.add(cliente);
+        }
+        
+        return novaListaClientes;
+    }
     
     public ArrayList<Cliente> listarClientesPorGenero(String tipoGenero) { 
         ArrayList<Cliente> listaFiltrada = new ArrayList<Cliente>(); 
