@@ -16,3 +16,8 @@ Os outputs estarão na pasta "bin"
 ## Dependency Management
 
 Ainda não possui nenhum
+
+## Aluno
+João Guimarães 
+# RA
+260542
