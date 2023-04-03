@@ -53,10 +53,9 @@ public class ClientePJ extends Cliente {
         segundoDigitoVerificador = Character.getNumericValue(novoCNPJ.charAt(novoCNPJ.length() - 1));
         
         //esse primeiro bloco vai somar e fazer as multiplicações base dos dígitos com 5, 4, 3, 2;
-        sum += (Character.getNumericValue(novoCNPJ.charAt(0)) * 5);
-        sum += (Character.getNumericValue(novoCNPJ.charAt(1)) * 4); 
-        sum += (Character.getNumericValue(novoCNPJ.charAt(2)) * 3);
-        sum += (Character.getNumericValue(novoCNPJ.charAt(3)) * 2);
+        for(int i = 0; i < 4; i++) {
+            sum += Character.getNumericValue(novoCNPJ.charAt(i)) * (5- i);
+        }
 
         //esse for irá realizar as multiplicações restantes;
         for(int i = 4; i < novoCNPJ.length() - 2; i++) {
@@ -78,11 +77,9 @@ public class ClientePJ extends Cliente {
 
         sum = 0; //reseta a variavel sum
 
-        sum += (Character.getNumericValue(novoCNPJ.charAt(0)) * 6);
-        sum += (Character.getNumericValue(novoCNPJ.charAt(1)) * 5);
-        sum += (Character.getNumericValue(novoCNPJ.charAt(2)) * 4); 
-        sum += (Character.getNumericValue(novoCNPJ.charAt(3)) * 3);
-        sum += (Character.getNumericValue(novoCNPJ.charAt(4)) * 2);
+        for(int i = 0; i < 5; i++) {
+            sum += Character.getNumericValue(novoCNPJ.charAt(i)) * (6 - i);
+        }
 
         //esse segundo for calcula o segundo dígito verificador 
         for(int i = 5; i < novoCNPJ.length() - 1; i++) {
