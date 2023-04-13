@@ -3,6 +3,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import Clientes.Cliente;
+import Clientes.ClientePF;
+import Clientes.ClientePJ;
 
 public class Seguradora {
     private String nome;
@@ -10,7 +12,7 @@ public class Seguradora {
     private String email;
     private String endereco;
     private Map<Integer, Sinistro> listaSinistros = new HashMap<Integer, Sinistro>(); //a chave do HashMap será o ID do sinistro 
-    private Map<String, Cliente> listaClientes = new HashMap<String, Cliente>(); //a chave deste map será o nome do cliente
+    private Map<String, Cliente> listaClientes = new HashMap<String, Cliente>(); //a chave deste map será o cpf ou cnpj do cliente
 
     public Seguradora(String nome, String telefone, String email, String endereco) {
         this.setNome(nome);
@@ -51,14 +53,26 @@ public class Seguradora {
         return this.endereco;
     }
 
-    public boolean cadastrarCliente(Cliente cliente) {
-        if(listaClientes.containsKey(cliente.getNome())) {
-
+    public boolean cadastrarCliente(ClientePF cliente) {
+        if(listaClientes.containsKey(cliente.getCPF())) {
             System.out.println("O cliente já existe na base de dados!");
             return false; //o cliente já existe na base de dados e não faz sentido adicioná-lo nela
         }
 
-        listaClientes.put(cliente.getNome(), cliente); //cliente ainda não existia e foi adicionado à base de dados com sucesso
+        listaClientes.put(cliente.getCPF(), cliente); //cliente ainda não existia e foi adicionado à base de dados com sucesso
+        System.out.println("Cliente adicionado com sucesso!");
+        return true;
+    }
+
+    //a função acima e a abaixo desse comentário são uma sobrecarga de métodos
+
+    public boolean cadastrarCliente(ClientePJ cliente) {
+        if(listaClientes.containsKey(cliente.getCNPJ())) {
+            System.out.println("O cliente já existe na base de dados!");
+            return false; //o cliente já existe na base de dados e não faz sentido adicioná-lo nela
+        }
+
+        listaClientes.put(cliente.getCNPJ(), cliente); //cliente ainda não existia e foi adicionado à base de dados com sucesso
         System.out.println("Cliente adicionado com sucesso!");
         return true;
     }
