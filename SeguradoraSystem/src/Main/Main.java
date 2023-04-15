@@ -1,15 +1,13 @@
 package Main;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Scanner;
 import Clientes.*;
 
 public class Main {
-    public static void main(String[] args) {
 
+    public static boolean criarCliente() {
         Scanner scanner = new Scanner(System.in);
-        Calendar dataFundacao = Calendar.getInstance();
 
         System.out.println("Você quer adicionar um cliente PJ ou PF? Digite sua resposta");
 
@@ -53,15 +51,26 @@ public class Main {
             
             Cliente novoCliente = new ClientePF(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cpf, dataNascimento);
             System.out.println(novoCliente.toString());
+
+
+            scanner.close();
+            return true;
+
         } else {
 
             System.out.println("n pode pj, foi mal");
+            scanner.close();
+            return false;
 
         }
 
-        scanner.close();
-
+        
     }
+    public static void main(String[] args) {
+
+        
+        criarCliente();
 
     
+    }
 }
