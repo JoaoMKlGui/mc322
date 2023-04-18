@@ -2,11 +2,12 @@ package Main;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
+import java.util.ArrayList;
 import Clientes.*;
 
 public class Main {
 
-    public static boolean criarCliente() {
+    public static boolean criarCliente(Seguradora seguradora) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Você quer adicionar um cliente PJ ou PF? Digite sua resposta");
@@ -49,9 +50,9 @@ public class Main {
             System.out.println("Digite o cpf");
             String cpf = scanner.nextLine();
             
-            Cliente novoCliente = new ClientePF(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cpf, dataNascimento);
+            ClientePF novoCliente = new ClientePF(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cpf, dataNascimento);
             System.out.println(novoCliente.toString());
-
+            seguradora.cadastrarCliente(novoCliente);
 
             scanner.close();
             return true;
@@ -67,10 +68,14 @@ public class Main {
         
     }
     public static void main(String[] args) {
-
+        Seguradora seguradoraTeste = new Seguradora("seguradora do jao", "0000-0000", "oioi@gmail.com", "unicamp");
         
-        criarCliente();
-
+        criarCliente(seguradoraTeste);
+        ArrayList<Cliente> clientes = seguradoraTeste.listarClientes();
+        System.out.println("**************************");
+        for(Cliente c : clientes) {
+            System.out.println(c.toString());
+        }
     
     }
 }
