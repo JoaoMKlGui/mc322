@@ -27,10 +27,10 @@ public class Validacao {
         if(todosCharIguais) {
             return false;
         }
-    
+
         primeiroDigitoVerificador = Character.getNumericValue(novoCPF.charAt(novoCPF.length() - 2));
         segundoDigitoVerificador = Character.getNumericValue(novoCPF.charAt(novoCPF.length() - 1));
-        
+
         //esse primeiro for vai verificar o primeiro digito verificador
         for(int i = 0; i < novoCPF.length() - 2; i++) {
             digito = Character.getNumericValue(novoCPF.charAt(i));
@@ -38,11 +38,11 @@ public class Validacao {
         }
 
         sum = 11 - (sum % 11); //utiliza a conta para a formação do dígito verificador
-        
+
         if(sum == 10 || sum == 11) {
             sum = 0;
         }
-        
+
         if(sum != primeiroDigitoVerificador) {
             return false;
         }

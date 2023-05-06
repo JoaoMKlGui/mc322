@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import Clientes.*;
 
 public class AppMain {
-
+    
     public static ClientePF criarClientePF() {
         Scanner scanner = new Scanner(System.in);
 
@@ -49,7 +49,7 @@ public class AppMain {
         ClientePF novoCliente = new ClientePF(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cpf, dataNascimento);
         System.out.println(novoCliente.toString());
 
-        scanner.close();
+        
     
         return novoCliente;
         
@@ -101,8 +101,6 @@ public class AppMain {
         
         ClientePJ novoCliente = new ClientePJ(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cnpj, dataFundacao, quantidadeDeFuncionarios);
         System.out.println(novoCliente.toString());
-
-        scanner.close();
     
         return novoCliente;
 
@@ -122,7 +120,7 @@ public class AppMain {
         String endereco = scanner.nextLine();
         
         Seguradora novaSeguradora = new Seguradora(nomeSeguradora, telefone, email, endereco);
-        scanner.close();
+        
 
         return novaSeguradora;
     }
@@ -141,7 +139,7 @@ public class AppMain {
         String placa = scanner.nextLine();
 
         Veiculo novoVeiculo = new Veiculo(placa, marca, modelo, anoDeFabricacao);
-        scanner.close();
+        
 
         return novoVeiculo;
     }
@@ -159,7 +157,11 @@ public class AppMain {
     }
     /*essas funções estão sobrecarregadas e recebem parâmetros de diferentes tipos, porém fazem a mesma coisa*/
     public static void cadastrarCliente(ClientePF cliente, Seguradora seguradora) {
-        if(Validacao.validarNome(cliente.getNome()) && Validacao.validarCNPJ(cliente.getCPF())) {
+
+        System.out.println(Validacao.validarNome(cliente.getNome()));
+        System.out.println(cliente.getCPF());
+
+        if(Validacao.validarNome(cliente.getNome()) && Validacao.validarCPF(cliente.getCPF())) {
             seguradora.cadastrarCliente(
                 cliente
             );
@@ -224,7 +226,7 @@ public class AppMain {
                         System.out.println("Não existe nenhuma seguradora com esse nome na base de dados. Verifique o nome e tente novamente");
                     } else {
                     
-                        while(opcao != 1 || opcao != 2) {
+                        while(opcao != 1 && opcao != 2) {
                             System.out.println("Você deseja criar um cliente PF ou um cliente PJ?");
                             System.out.println("Digite 1 para cliente PF");
                             System.out.println("Digite 2 para cliente PJ");
@@ -232,7 +234,7 @@ public class AppMain {
                             opcao = scanner.nextInt();
                             lixo = scanner.nextLine();
 
-                            if(opcao != 1 || opcao != 2) {
+                            if(opcao != 1 && opcao != 2) {
                                 System.out.println("Digite uma opção válida!");
                             }
                         }
@@ -321,15 +323,8 @@ public class AppMain {
                         String nomeSeguradora = scanner.nextLine();
                         for(Seguradora seguradora : listaSeguradorasDoSistema) {
                             if (seguradora.getNome().equals(nomeSeguradora)) {
-                                System.out.println("Confirme os dados da seguradora");
-                                System.out.println(seguradora.toString());
-                                System.out.println("Digite 1 se essa for a seguradora desejada, digite 2 caso não");
-                                int resposta = scanner.nextInt();
-                                lixo = scanner.nextLine();
-                                if(resposta == 1){
-                                    seguradoraListar = seguradora;
-                                    break;
-                                }
+                                seguradoraListar = seguradora;
+                                break;
                             }
                         }
 
@@ -347,60 +342,40 @@ public class AppMain {
                     Seguradora seguradoraListar = null;
                     Cliente clienteListar = null;
 
-                    while(seguradoraListar == null) {
-                        System.out.println("****************");
-                        System.out.println("Por favor digite o nome da seguradora que você deseja listar os clientes");
-                        String nomeSeguradora = scanner.nextLine();
-                        for(Seguradora seguradora : listaSeguradorasDoSistema) {
-                            if (seguradora.getNome().equals(nomeSeguradora)) {
-                                System.out.println("Confirme os dados da seguradora");
-                                System.out.println(seguradora.toString());
-                                System.out.println("Digite 1 se essa for a seguradora desejada, digite 2 caso não");
-                                int resposta = scanner.nextInt();
-                                lixo = scanner.nextLine();
-                                if(resposta == 1){
-                                    seguradoraListar = seguradora;
-                                    break;
-                                }
-                            
-                            }
-                        }
-
-                        if(seguradoraListar == null) {
-                            System.out.println("Seguradora não encontrada na base de dados. Verifique o nome e tente novamente");
+                    System.out.println("****************");
+                    System.out.println("Por favor digite o nome da seguradora que você deseja listar os clientes");
+                    String nomeSeguradora = scanner.nextLine();
+                    for(Seguradora seguradora : listaSeguradorasDoSistema) {
+                        if (seguradora.getNome().equals(nomeSeguradora)) {
+                            seguradoraListar = seguradora;
+                            break;
                         }
                     }
-                        
-                    
-                    System.out.println("Qual o nome do cliente que você deseja listar os sinistros?");
-                    String nomeClienteListar = scanner.nextLine();
 
-                    for(Cliente cliente : seguradoraListar.listarClientes()) {
-                        if(cliente.getNome().equals(nomeClienteListar)) {
-                            System.out.println(cliente.toString());
-                            System.out.println("****");
-                            System.out.println("Confira as informações desse cliente. Caso seja ele, digite 1, caso não, digite 2");
-                            int resposta = scanner.nextInt();
-                            lixo = scanner.nextLine();
+                    if(seguradoraListar == null) {
+                        System.out.println("Seguradora não encontrada na base de dados. Verifique o nome e tente novamente");
+                    } else {
+                        System.out.println("Qual o nome do cliente que você deseja listar os sinistros?");
+                        String nomeClienteListar = scanner.nextLine();
 
-                            if(resposta == 1) {
+                        for(Cliente cliente : seguradoraListar.listarClientes()) {
+                            if(cliente.getNome().equals(nomeClienteListar)) {
                                 clienteListar = cliente;
                                 break;
+
+                            }
+                        }
+
+                        if(clienteListar == null) {
+                            System.out.println("Cliente não encontrado na base de dados, tente outro nome ou verifique as informações");
+                        } else {
+
+                            for(Sinistro sinistroCliente : seguradoraListar.listarSinistrosPorCliente(clienteListar)) {
+                                System.out.println(sinistroCliente.toString());
                             }
 
                         }
                     }
-
-                    if(clienteListar == null) {
-                        System.out.println("Cliente não encontrado na base de dados, tente outro nome ou verifique as informações");
-                    } else {
-
-                        for(Sinistro sinistroCliente : seguradoraListar.listarSinistrosPorCliente(clienteListar)) {
-                            System.out.println(sinistroCliente.toString());
-                        }
-
-                    }
-                    
 
                 } else if (operacao == MenuListar.LISTAR_SINISTROS_POR_SEGURADORA.operacao) {
                     Seguradora seguradoraListar = null;
