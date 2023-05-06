@@ -3,7 +3,7 @@ import java.util.Calendar;
 import java.util.ArrayList;
 import Main.Veiculo;
 
-public class Cliente {
+public abstract class Cliente {
     private String nome;
     private String endereco;
     private Calendar dataLicenca;
@@ -11,6 +11,7 @@ public class Cliente {
     private String genero;
     private String classeEconomica;
     private ArrayList<Veiculo> listaVeiculos = new ArrayList<Veiculo>();
+    private double valorSeguro;
 
     public Cliente(String nome, String endereco, Calendar dataLicenca, String educacao, String genero, String classeEconomica) {
         this.setNome(nome);
@@ -68,6 +69,14 @@ public class Cliente {
     public String getClasseEco() {
         return this.classeEconomica;
     }
+    
+    public double getValorSeguro() {
+        return valorSeguro;
+    }
+
+    public void setValorSeguro(double valorSeguro) {
+        this.valorSeguro = valorSeguro;
+    }
 
     public String visualizarVeiculos() {
         String veiculos = "";
@@ -78,9 +87,28 @@ public class Cliente {
         return veiculos;
     }
 
+    public ArrayList<Veiculo> getVeiculos() {
+        return this.listaVeiculos;
+    }
+
     public void adicionarVeiculo(Veiculo novoVeiculo) {
         listaVeiculos.add(novoVeiculo);
         System.out.println("Novo veículo adicionado com sucesso!");
+    }
+
+    public void removerVeiculo(String placa) {
+        for (Veiculo veiculo : listaVeiculos) {
+            if (veiculo.getPlaca().equals(placa)) {
+                
+                this.listaVeiculos.remove(veiculo);
+            }
+        }
+    }
+
+    public abstract double calculaScore();
+
+    public void apagarListaVeiculos() {
+        this.listaVeiculos = new ArrayList<Veiculo>(); //função criada para conseguir manipular melhor os dados devido à função de transferir seguro
     }
 
     @Override

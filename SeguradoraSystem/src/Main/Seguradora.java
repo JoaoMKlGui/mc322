@@ -59,6 +59,7 @@ public class Seguradora {
             return false; //o cliente já existe na base de dados e não faz sentido adicioná-lo nela
         }
 
+        
         listaClientes.put(cliente.getCPF(), cliente); //cliente ainda não existia e foi adicionado à base de dados com sucesso
         System.out.println("Cliente adicionado com sucesso!");
         return true;
@@ -72,14 +73,15 @@ public class Seguradora {
             return false; //o cliente já existe na base de dados e não faz sentido adicioná-lo nela
         }
 
+
         listaClientes.put(cliente.getCNPJ(), cliente); //cliente ainda não existia e foi adicionado à base de dados com sucesso
         System.out.println("Cliente adicionado com sucesso!");
         return true;
     }
 
-    public boolean removerCliente(String nomeCliente) {
-        if (listaClientes.containsKey(nomeCliente)) {
-            listaClientes.remove(nomeCliente);
+    public boolean removerCliente(String CPFouCNPJ) {
+        if (listaClientes.containsKey(CPFouCNPJ)) {
+            listaClientes.remove(CPFouCNPJ);
             
             System.out.println("Cliente removido da base de dados com sucesso!");
             return true;
@@ -87,6 +89,16 @@ public class Seguradora {
         
         System.out.println("O cliente não existe na base de dados!");
         return false; 
+    }
+
+    public void visualizarClientePF(String cpf) {
+        Cliente cliente = this.listaClientes.get(cpf);
+        System.out.println(cliente.toString());
+    }
+
+    public void visualizarClientePJ(String cnpj) {
+        Cliente cliente = this.listaClientes.get(cnpj);
+        System.out.println(cliente.toString());
     }
 
     public ArrayList<Cliente> listarClientes() {
@@ -142,6 +154,17 @@ public class Seguradora {
         return true;
     }
 
+    public boolean removerSinistro(int id) {
+        if (this.listaSinistros.containsKey(id)) {
+            listaSinistros.remove(id);
+            System.out.println("Sinistro removido com sucesso!");
+            return true;
+        } else {
+            System.out.println("Não existe nenhum sinistro com esse ID");
+            return false;
+        }
+    }
+
     public boolean visualizarSinistro(String nomeCliente) {
         
         for(Sinistro sinistro : listaSinistros.values()) {
@@ -164,4 +187,55 @@ public class Seguradora {
 
         return novaListaSinistros;
     }
+
+    public ArrayList<Sinistro> listarSinistrosPorCliente(Cliente cliente) {
+
+        ArrayList<Sinistro> listaSinistrosDoCliente = new ArrayList<Sinistro>();
+
+        for (Sinistro sinistro : listaSinistros.values()) {
+            if (sinistro.getCliente().equals(cliente)) {
+                listaSinistrosDoCliente.add(sinistro);
+            }
+        }
+
+        return listaSinistrosDoCliente;
+    }
+
+    public ArrayList<Veiculo> listarVeiculosSeguradora() {
+        ArrayList<Veiculo> listaDeVeiculos = new ArrayList<Veiculo>();
+
+        for (Cliente cliente : this.listaClientes.values()) {
+            listaDeVeiculos.addAll(cliente.getVeiculos());
+        }
+
+        return listaDeVeiculos;
+    }
+
+    public double calculaPrecoSeguroCliente(Cliente cliente) {
+        return (cliente.calculaScore() * (1 + this.listarSinistrosPorCliente(cliente).size()));
+    }
+
+    public double calcularReceita() {
+        double receita = 0;
+
+        for(Cliente cliente : listaClientes.values()) {
+            receita+= cliente.getValorSeguro();
+        }
+
+        return receita;
+    }
+
+    public void transferirSeguro(Cliente clienteQueVaiTransferir, Cliente clienteQueVaiReceber) {
+        ArrayList<Veiculo> veiculosClienteQueVaiTransferir = clienteQueVaiTransferir.getVeiculos();
+        
+        for(Veiculo veiculo : veiculosClienteQueVaiTransferir) { /* essa parte vai transferir os veiculos segurados por um cliente para outro */
+            clienteQueVaiReceber.adicionarVeiculo(veiculo); 
+        }
+
+        clienteQueVaiTransferir.apagarListaVeiculos();
+
+        clienteQueVaiTransferir.setValorSeguro(0); //setando como zero já que ele não segura mais nenhum carro
+        clienteQueVaiReceber.setValorSeguro(this.calculaPrecoSeguroCliente(clienteQueVaiReceber));
+    }
+
 }

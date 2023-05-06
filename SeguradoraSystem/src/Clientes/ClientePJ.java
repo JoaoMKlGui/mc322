@@ -1,14 +1,18 @@
 package Clientes;
 import java.util.Calendar;
 
+import Main.CalculoSeguro;
+
 public class ClientePJ extends Cliente {
     final private String cnpj;
     private Calendar dataFundacao;
+    private int quantidadeFuncionarios;
 
-    public ClientePJ(String nome, String endereco, Calendar dataLicenca, String educacao, String genero, String classeEco, String cnpj, Calendar dataFundacao) {
+    public ClientePJ(String nome, String endereco, Calendar dataLicenca, String educacao, String genero, String classeEco, String cnpj, Calendar dataFundacao, int quantidadeFuncionarios) {
         super(nome, endereco, dataLicenca, educacao, genero, classeEco);
         this.cnpj = cnpj;
         this.setDataFundacao(dataFundacao);
+        this.setQuantidadeFuncionarios(quantidadeFuncionarios);
     }
 
     private void setDataFundacao(Calendar dataFundacao) {
@@ -23,84 +27,17 @@ public class ClientePJ extends Cliente {
         return this.dataFundacao;
     }
 
-    public boolean validarCNPJ() {
-        int primeiroDigitoVerificador;
-        int segundoDigitoVerificador;
-        int sum = 0;
-        int digito;
-        boolean todosCharIguais = true;
-        String novoCNPJ;
+    public int getQuantidadeFuncionarios() {
+        return quantidadeFuncionarios;
+    }
 
-        novoCNPJ = cnpj.replaceAll("[^0-9]+", ""); //formatando o CPF de XXX.XXX.XXX-XX para XXXXXXXXXXX
+    public void setQuantidadeFuncionarios(int quantidadeFuncionarios) {
+        this.quantidadeFuncionarios = quantidadeFuncionarios;
+    }
 
-        if(novoCNPJ.length() != 14) {
-            //todo CNPJ é formado por 14 números, logo, se ele tiver um numero diferente de digitos, não será válido
-            return false;
-        }
-
-        //aqui verificando se todos os dígitos são iguais
-        for(int i = 0; i < novoCNPJ.length(); i++) {
-            if(novoCNPJ.charAt(i) != novoCNPJ.charAt(0)) {
-                todosCharIguais = false;
-            } 
-        }
-
-        if(todosCharIguais) {
-            return false;
-        }
-    
-        primeiroDigitoVerificador = Character.getNumericValue(novoCNPJ.charAt(novoCNPJ.length() - 2));
-        segundoDigitoVerificador = Character.getNumericValue(novoCNPJ.charAt(novoCNPJ.length() - 1));
-        
-        //esse primeiro bloco vai somar e fazer as multiplicações base dos dígitos com 5, 4, 3, 2;
-        for(int i = 0; i < 4; i++) {
-            sum += Character.getNumericValue(novoCNPJ.charAt(i)) * (5- i);
-        }
-
-        //esse for irá realizar as multiplicações restantes;
-        for(int i = 4; i < novoCNPJ.length() - 2; i++) {
-            digito = Character.getNumericValue(novoCNPJ.charAt(i));
-            sum += digito * (13 - i); 
-        }
-
-        sum = sum % 11; 
-        
-        if(sum == 0 || sum == 1) {
-            sum = 0;
-        } else {                   //esse bloco condicional faz as contas necessárias para a formação do primeiro dígito verificador
-            sum = 11 - sum;
-        }
-        
-        if(sum != primeiroDigitoVerificador) {
-            return false;
-        }
-
-        sum = 0; //reseta a variavel sum
-
-        for(int i = 0; i < 5; i++) {
-            sum += Character.getNumericValue(novoCNPJ.charAt(i)) * (6 - i);
-        }
-
-        //esse segundo for calcula o segundo dígito verificador 
-        for(int i = 5; i < novoCNPJ.length() - 1; i++) {
-            digito = Character.getNumericValue(novoCNPJ.charAt(i));
-            sum += digito * (14 - i); 
-        }
-
-        sum = sum % 11;
-
-        if(sum == 0 || sum == 1) {
-            sum = 0;
-        } else {                   //esse bloco condicional faz as contas necessárias para a formação do segundo dígito verificador
-            sum = 11 - sum;
-        }
-
-        if(sum != segundoDigitoVerificador) {
-            return false;
-        }
-
-        //se a função chegou até aqui, quer dizer que todos os requisitos foram satisfeitos e o cpf é válido
-        return true;
+    @Override
+    public double calculaScore() {
+        return CalculoSeguro.VALOR_BASE.valor * (1 + (this.getQuantidadeFuncionarios()/100)) * this.getVeiculos().size();
     }
 
     @Override
