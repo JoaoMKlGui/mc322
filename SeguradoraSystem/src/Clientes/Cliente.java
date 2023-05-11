@@ -108,7 +108,7 @@ public abstract class Cliente {
     public abstract double calculaScore();
 
     public void apagarListaVeiculos() {
-        this.listaVeiculos = new ArrayList<Veiculo>(); //função criada para conseguir manipular melhor os dados devido à função de transferir seguro
+        this.listaVeiculos.clear(); //função criada para conseguir manipular melhor os dados devido à função de transferir seguro
     }
 
     @Override

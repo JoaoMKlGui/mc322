@@ -51,7 +51,7 @@ public class Validacao {
 
         //esse segundo for calcula o segundo dígito verificador 
         for(int i = 0; i < novoCPF.length() - 1; i++) {
-            digito = Character.getNumericValue(cpf.charAt(i));
+            digito = Character.getNumericValue(novoCPF.charAt(i));
             sum += digito * (11 - i); 
         }
 

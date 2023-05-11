@@ -47,7 +47,6 @@ public class AppMain {
         String cpf = scanner.nextLine();
         
         ClientePF novoCliente = new ClientePF(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cpf, dataNascimento);
-        System.out.println(novoCliente.toString());
 
         
     
@@ -152,14 +151,13 @@ public class AppMain {
             );
         } else {
             System.out.println("Nome ou CNPJ inválidos!");
+            System.out.println("Lembre-se que o nome não pode ter nenhum acento, cedilha ou caracteres especiais!");
         }
         
     }
     /*essas funções estão sobrecarregadas e recebem parâmetros de diferentes tipos, porém fazem a mesma coisa*/
     public static void cadastrarCliente(ClientePF cliente, Seguradora seguradora) {
 
-        System.out.println(Validacao.validarNome(cliente.getNome()));
-        System.out.println(cliente.getCPF());
 
         if(Validacao.validarNome(cliente.getNome()) && Validacao.validarCPF(cliente.getCPF())) {
             seguradora.cadastrarCliente(
@@ -209,7 +207,7 @@ public class AppMain {
                 lixo = scanner.nextLine();
 
                 if (operacao == MenuCadastro.CADASTRAR_CLIENTE.operacao) {
-                    int opcao = 1;
+                    int opcao = 0;
                     Seguradora seguradoraParaCadastrar = null;
 
                     System.out.println("****************");
@@ -222,6 +220,7 @@ public class AppMain {
                         }   
 
                     }
+
                     if(seguradoraParaCadastrar == null) {
                         System.out.println("Não existe nenhuma seguradora com esse nome na base de dados. Verifique o nome e tente novamente");
                     } else {

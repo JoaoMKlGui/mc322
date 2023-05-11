@@ -27,7 +27,7 @@ public class ClientePF extends Cliente {
         return this.dataNascimento;
     }
 
-    public int calcularIdade() {
+    private int calcularIdade() {
 
         String diaNascimento = Datas.pegarDiaDoNascimento(this.dataNascimento);
         String mesNascimento = Datas.pegarMesDoNascimento(this.dataNascimento); 
