@@ -29,7 +29,14 @@ public class ClientePF extends Cliente {
 
     private int calcularIdade() {
 
-        String diaNascimento = Datas.pegarDiaDoNascimento(this.dataNascimento);
+        String diaNascimento;
+
+        if(Integer.parseInt(Datas.pegarDiaDoNascimento(dataNascimento)) < 10) {
+            diaNascimento = "0" + Datas.pegarDiaDoNascimento(this.dataNascimento);
+        } else {
+            diaNascimento = Datas.pegarDiaDoNascimento(dataNascimento);
+        }
+
         String mesNascimento = Datas.pegarMesDoNascimento(this.dataNascimento); 
         String anoNascimento = Datas.pegarAnoDoNascimento(this.dataNascimento);
         String dataNascimentoString = anoNascimento + '-' + mesNascimento + '-' + diaNascimento;
@@ -45,13 +52,13 @@ public class ClientePF extends Cliente {
         int idade = this.calcularIdade();
 
         if (idade >= 18 && idade < 30) {
-            return (CalculoSeguro.VALOR_BASE.valor * 1.25 * this.getVeiculos().size());
+            return (CalculoSeguro.VALOR_BASE.valor * CalculoSeguro.FATOR_18_30.valor * this.getVeiculos().size());
 
         } else if (idade >= 30 && idade <= 60) {
-            return (CalculoSeguro.VALOR_BASE.valor * 1 * this.getVeiculos().size());
+            return (CalculoSeguro.VALOR_BASE.valor * CalculoSeguro.FATOR_30_60.valor * this.getVeiculos().size());
 
         } else {
-            return (CalculoSeguro.VALOR_BASE.valor * 1.5 * this.getVeiculos().size());
+            return (CalculoSeguro.VALOR_BASE.valor * CalculoSeguro.FATOR_60_90.valor * this.getVeiculos().size());
         }
 
     }

@@ -151,6 +151,8 @@ public class Seguradora {
 
         listaSinistros.put(novoSinistro.getID(), novoSinistro); //adicionando o novo sinistro gerado à lista de sinistros da seguradora
 
+        cliente.setValorSeguro(this.calculaPrecoSeguroCliente(cliente));
+
         return true;
     }
 
@@ -212,6 +214,7 @@ public class Seguradora {
     }
 
     public double calculaPrecoSeguroCliente(Cliente cliente) {
+    
         return (cliente.calculaScore() * (1 + this.listarSinistrosPorCliente(cliente).size()));
     }
 
@@ -219,7 +222,9 @@ public class Seguradora {
         double receita = 0;
 
         for(Cliente cliente : listaClientes.values()) {
+
             receita+= cliente.getValorSeguro();
+            
         }
 
         return receita;

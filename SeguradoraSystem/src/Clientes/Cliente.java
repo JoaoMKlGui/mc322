@@ -71,6 +71,7 @@ public abstract class Cliente {
     }
     
     public double getValorSeguro() {
+        
         return valorSeguro;
     }
 

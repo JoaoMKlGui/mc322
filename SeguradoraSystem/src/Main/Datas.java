@@ -8,7 +8,7 @@ public class Datas {
     }
 
     public static String pegarMesDoNascimento(Calendar dataNascimento) {
-        return String.valueOf(dataNascimento.get(Calendar.MONTH));
+        return String.valueOf(dataNascimento.get(Calendar.MONTH) + 1);
     }
 
     public static String pegarAnoDoNascimento(Calendar dataNascimento) {

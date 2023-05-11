@@ -1,5 +1,6 @@
 package Main;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -165,6 +166,7 @@ public class AppMain {
             );
         } else {
             System.out.println("Nome ou CPF inválidos!");
+            System.out.println("Lembre-se que o nome não pode ter nenhum acento, cedilha ou caracteres especiais!");
         }
     }
 
@@ -175,9 +177,56 @@ public class AppMain {
         String lixo;
         ArrayList<Seguradora> listaSeguradorasDoSistema = new ArrayList<Seguradora>();
 
+
+        String dataLic = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(Calendar.getInstance().getTime());
+        String[] partes_da_data = dataLic.split("_");
+        int anoLicenca = Integer.parseInt(partes_da_data[0]);
+        int mesLicenca = Integer.parseInt(partes_da_data[1]) - 1;
+        int diaLicenca = Integer.parseInt(partes_da_data[2]);
+
+        Calendar dataLicenca = new GregorianCalendar(anoLicenca, mesLicenca, diaLicenca);
+
+
+        Calendar data1 = new GregorianCalendar(2003, 11, 31); //lembrando que mês 11 é dezembro porque o calendar começa a contar do 0
+        Calendar data2 = new GregorianCalendar(2001, 8, 11);
+
         System.out.println("****************");
         System.out.println("Bem vindo ao App SeguradorasSystem!");
         System.out.println("****************");
+
+
+        Seguradora seguradoraPreCadastrado = new Seguradora("Ale Seixas", "(19) 993423301", "a260533@dac.unicamp.br", "campinas");
+        listaSeguradorasDoSistema.add(seguradoraPreCadastrado);
+        ClientePF clientePF = new ClientePF("joao", "unicamp", dataLicenca, "superior", "masculino","alta", "104.337.449-36", data1);
+        ClientePJ clientePJ = new ClientePJ("Oficina Simas Turbo", "Unicamp", dataLicenca, "fundamental", "masculino", "alta", "55.889.662/0001-56", data2, 100);
+        seguradoraPreCadastrado.cadastrarCliente(clientePJ);
+        seguradoraPreCadastrado.cadastrarCliente(clientePF);
+        Veiculo veiculo1 = new Veiculo("FDP-0000", "Ford", "Mustang Shelby", 2020);
+        Veiculo veiculo2 = new Veiculo("OFF-0000", "Ford", "Maverick", 1975);
+        clientePF.adicionarVeiculo(veiculo1);
+        clientePJ.adicionarVeiculo(veiculo2);
+        seguradoraPreCadastrado.gerarSinistro("01/05/2023", "Unicamp", seguradoraPreCadastrado, veiculo1, clientePF);
+        seguradoraPreCadastrado.gerarSinistro("01/05/2023", "Unicamp", seguradoraPreCadastrado, veiculo2, clientePJ);
+
+        System.out.println(clientePF);
+        System.out.println(clientePJ);
+
+        for(Cliente cliente : seguradoraPreCadastrado.listarClientes()) {
+            System.out.println(cliente);
+        }
+
+        seguradoraPreCadastrado.visualizarSinistro("Oficina Simas Turbo");
+
+        for(Sinistro sinistro : seguradoraPreCadastrado.listarSinistros()) {
+            System.out.println(sinistro);
+        }
+
+        System.out.println(seguradoraPreCadastrado.calcularReceita());
+
+        Veiculo veiculo3 = new Veiculo("OIE-0000", "Ferrari", "F40", 1995);
+        clientePF.adicionarVeiculo(veiculo3);
+        clientePF.setValorSeguro(seguradoraPreCadastrado.calculaPrecoSeguroCliente(clientePF));
+        System.out.println(seguradoraPreCadastrado.calcularReceita());
 
         while(true) {
             System.out.println("MENU PRINCIPAL");
@@ -291,6 +340,7 @@ public class AppMain {
                             System.out.println("Cliente não encontrado na base de dados dessa seguradora. Tente novamente");
                         } else {
                             clienteCadastrarVeiculo.adicionarVeiculo(novoVeiculo);
+                            clienteCadastrarVeiculo.setValorSeguro(seguradoraCliente.calculaPrecoSeguroCliente(clienteCadastrarVeiculo)); //atualiza o valor do seguro do cliente
                         }
                     }
 
