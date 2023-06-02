@@ -2,6 +2,7 @@ package Clientes;
 import java.util.Calendar;
 import java.util.ArrayList;
 import Main.Veiculo;
+import Main.Seguradora;
 
 public abstract class Cliente {
     private String nome;
@@ -12,14 +13,16 @@ public abstract class Cliente {
     private String classeEconomica;
     private ArrayList<Veiculo> listaVeiculos = new ArrayList<Veiculo>();
     private double valorSeguro;
+    private Seguradora seguradoraCliente;
 
-    public Cliente(String nome, String endereco, Calendar dataLicenca, String educacao, String genero, String classeEconomica) {
+    public Cliente(String nome, String endereco, Calendar dataLicenca, String educacao, String genero, String classeEconomica, Seguradora seguradora) {
         this.setNome(nome);
         this.setEndereco(endereco);
         this.setDataLicenca(dataLicenca);
         this.setEducacao(educacao);
         this.setGenero(genero);
         this.setClasseEco(classeEconomica);
+        this.setSeguradoraCliente(seguradora);
     }
 
     private void setDataLicenca(Calendar dataLicenca) {
@@ -44,6 +47,14 @@ public abstract class Cliente {
 
     private void setEndereco(String endereco) {
         this.endereco = endereco;
+    }
+
+    public Seguradora getSeguradoraCliente() {
+        return seguradoraCliente;
+    }
+
+    public void setSeguradoraCliente(Seguradora seguradoraCliente) {
+        this.seguradoraCliente = seguradoraCliente;
     }
 
     public String getNome() {
@@ -95,15 +106,17 @@ public abstract class Cliente {
     public void adicionarVeiculo(Veiculo novoVeiculo) {
         listaVeiculos.add(novoVeiculo);
         System.out.println("Novo veículo adicionado com sucesso!");
+         
     }
 
     public void removerVeiculo(String placa) {
         for (Veiculo veiculo : listaVeiculos) {
             if (veiculo.getPlaca().equals(placa)) {
-                
                 this.listaVeiculos.remove(veiculo);
+                break;
             }
         }
+
     }
 
     public abstract double calculaScore();

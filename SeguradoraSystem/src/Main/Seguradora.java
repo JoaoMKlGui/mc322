@@ -7,18 +7,20 @@ import Clientes.ClientePF;
 import Clientes.ClientePJ;
 
 public class Seguradora {
+    private final String cnpj;
     private String nome;
     private String telefone;
     private String email;
     private String endereco;
-    private Map<Integer, Sinistro> listaSinistros = new HashMap<Integer, Sinistro>(); //a chave do HashMap será o ID do sinistro 
+    private ArrayList<Seguro> listaSeguros = new ArrayList<Seguro>();
     private Map<String, Cliente> listaClientes = new HashMap<String, Cliente>(); //a chave deste map será o cpf ou cnpj do cliente
 
-    public Seguradora(String nome, String telefone, String email, String endereco) {
+    public Seguradora(String nome, String telefone, String email, String endereco, String cnpj) {
         this.setNome(nome);
         this.setTelefone(telefone);
         this.setEmail(email);
         this.setEndereco(endereco);
+        this.cnpj = cnpj; //a string cnpj já passou pela validação de cnpj
     }
 
     private void setNome(String nome) {
@@ -35,7 +37,11 @@ public class Seguradora {
 
     private void setEndereco(String endereco) {
         this.endereco = endereco;
-    } 
+    }
+    
+    public String getCnpj() {
+        return cnpj;
+    }
 
     public String getNome() {
         return this.nome;
@@ -101,6 +107,27 @@ public class Seguradora {
         System.out.println(cliente.toString());
     }
 
+    public void gerarSeguro(ClientePF clientePf, Veiculo veiculo) {
+        SeguroPF novoSeguro = new SeguroPF(this, clientePf, veiculo);
+
+        this.listaSeguros.add(novoSeguro);
+
+    }
+
+    //sobrecarga do metodo gerar seguro
+    public void gerarSeguro(ClientePJ clientePj, Frota frota) {
+        SeguroPJ novoSeguro = new SeguroPJ(this, clientePj, frota);
+        this.listaSeguros.add(novoSeguro);
+    }
+
+    public void cancelarSeguro(SeguroPF seguro) {
+        this.listaSeguros.remove(seguro);
+    }
+
+    public void cancelarSeguro(SeguroPJ seguro) {
+        this.listaSeguros.remove(seguro);
+    }
+
     public ArrayList<Cliente> listarClientes() {
         ArrayList<Cliente> novaListaClientes = new ArrayList<Cliente>();
         for(Cliente cliente : listaClientes.values()) {
@@ -145,62 +172,10 @@ public class Seguradora {
 
         return listaFiltrada;
     }
-    
-    public boolean gerarSinistro(String data, String endereco, Seguradora seguradora, Veiculo veiculo, Cliente cliente) {
-        Sinistro novoSinistro = new Sinistro(data, endereco, seguradora, veiculo, cliente);
 
-        listaSinistros.put(novoSinistro.getID(), novoSinistro); //adicionando o novo sinistro gerado à lista de sinistros da seguradora
 
-        cliente.setValorSeguro(this.calculaPrecoSeguroCliente(cliente));
-
-        return true;
-    }
-
-    public boolean removerSinistro(int id) {
-        if (this.listaSinistros.containsKey(id)) {
-            listaSinistros.remove(id);
-            System.out.println("Sinistro removido com sucesso!");
-            return true;
-        } else {
-            System.out.println("Não existe nenhum sinistro com esse ID");
-            return false;
-        }
-    }
-
-    public boolean visualizarSinistro(String nomeCliente) {
-        
-        for(Sinistro sinistro : listaSinistros.values()) {
-            if (sinistro.getCliente().getNome().equals(nomeCliente)) {
-                System.out.println(sinistro.toString()); //existe um sinistro no nome do cliente passado e esse sinistro foi visualizado com sucesso
-                return true;
-            }
-        }
-
-        System.out.println("Não existe nenhum sinistro no nome de " + nomeCliente);
-        return false; //não existe nenhum sinistro no nome do cliente passado e, portanto, nada foi visualizado
-    }
-
-    public ArrayList<Sinistro> listarSinistros() {
-        ArrayList<Sinistro> novaListaSinistros = new ArrayList<Sinistro>();
-        
-        for(Sinistro sinistro : listaSinistros.values()) {
-            novaListaSinistros.add(sinistro);
-        }
-
-        return novaListaSinistros;
-    }
-
-    public ArrayList<Sinistro> listarSinistrosPorCliente(Cliente cliente) {
-
-        ArrayList<Sinistro> listaSinistrosDoCliente = new ArrayList<Sinistro>();
-
-        for (Sinistro sinistro : listaSinistros.values()) {
-            if (sinistro.getCliente().equals(cliente)) {
-                listaSinistrosDoCliente.add(sinistro);
-            }
-        }
-
-        return listaSinistrosDoCliente;
+    public ArrayList<Seguro> listarSeguros() {
+        return this.listaSeguros;
     }
 
     public ArrayList<Veiculo> listarVeiculosSeguradora() {
@@ -211,11 +186,6 @@ public class Seguradora {
         }
 
         return listaDeVeiculos;
-    }
-
-    public double calculaPrecoSeguroCliente(Cliente cliente) {
-    
-        return (cliente.calculaScore() * (1 + this.listarSinistrosPorCliente(cliente).size()));
     }
 
     public double calcularReceita() {
@@ -230,17 +200,17 @@ public class Seguradora {
         return receita;
     }
 
-    public void transferirSeguro(Cliente clienteQueVaiTransferir, Cliente clienteQueVaiReceber) {
-        ArrayList<Veiculo> veiculosClienteQueVaiTransferir = clienteQueVaiTransferir.getVeiculos();
+    public ArrayList<Seguro> getSegurosPorCliente(Cliente cliente) {
+        ArrayList<Seguro> segurosCliente = new ArrayList<Seguro>();
         
-        for(Veiculo veiculo : veiculosClienteQueVaiTransferir) { /* essa parte vai transferir os veiculos segurados por um cliente para outro */
-            clienteQueVaiReceber.adicionarVeiculo(veiculo); 
+        for (Seguro seguro : this.listaSeguros) {
+            if(seguro.getCliente().equals(cliente)) {
+                segurosCliente.add(seguro);
+            }
         }
 
-        clienteQueVaiTransferir.apagarListaVeiculos();
+        return segurosCliente;
 
-        clienteQueVaiTransferir.setValorSeguro(0); //setando como zero já que ele não segura mais nenhum carro
-        clienteQueVaiReceber.setValorSeguro(this.calculaPrecoSeguroCliente(clienteQueVaiReceber));
     }
 
 }

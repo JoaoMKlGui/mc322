@@ -1,4 +1,4 @@
-package Main;
+package Auxiliares;
 
 public enum CalculoSeguro {
     VALOR_BASE(100.0),

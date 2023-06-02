@@ -1,4 +1,4 @@
-package Main;
+package Menus;
 
 public enum MenuListar {
     LISTAR_CLIENTES(1),

@@ -1,14 +1,14 @@
-package Main;
+package Menus;
 
-public enum MenuRemover {
-    EXCLUIR_CLIENTE(1),
-    EXCLUIR_VEICULO(2),
-    EXCLUIR_SINISTRO(3),
+public enum MenuCadastro {
+    CADASTRAR_CLIENTE(1),
+    CADASTRAR_VEICULO(2),
+    CADASTRAR_SEGURADORA(3),
     VOLTAR(4);
 
     public final int operacao;
 
-    MenuRemover(int operacao) {
+    MenuCadastro(int operacao) {
         this.operacao = operacao;
     }
 

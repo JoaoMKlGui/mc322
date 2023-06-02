@@ -1,4 +1,4 @@
-package Main;
+package Auxiliares;
 
 public class Validacao {
     

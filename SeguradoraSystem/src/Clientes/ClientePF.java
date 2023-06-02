@@ -1,16 +1,18 @@
 package Clientes;
 import java.util.Calendar;
+import Auxiliares.CalculoSeguro;
+import Auxiliares.Datas;
 import java.time.LocalDate;
 import java.time.Period;
-import Main.CalculoSeguro;
-import Main.Datas;
+
+import Main.Seguradora;
 
 public class ClientePF extends Cliente {
     final private String cpf;
     private Calendar dataNascimento;
 
-    public ClientePF(String nome, String endereco, Calendar dataLicenca, String educacao, String genero, String classeEco, String cpf, Calendar dataNascimento) {
-        super(nome, endereco, dataLicenca, educacao, genero, classeEco);
+    public ClientePF(String nome, String endereco, Calendar dataLicenca, String educacao, String genero, String classeEco, String cpf, Calendar dataNascimento, Seguradora seguradora) {
+        super(nome, endereco, dataLicenca, educacao, genero, classeEco, seguradora);
         this.cpf = cpf;
         this.setDataNascimento(dataNascimento);
     }
@@ -27,7 +29,7 @@ public class ClientePF extends Cliente {
         return this.dataNascimento;
     }
 
-    private int calcularIdade() {
+    public int calcularIdade() {
 
         String diaNascimento;
 

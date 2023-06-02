@@ -1,4 +1,4 @@
-package Main;
+package Menus;
 
 public enum MenuOperacoes {
     CADASTRAR(1),

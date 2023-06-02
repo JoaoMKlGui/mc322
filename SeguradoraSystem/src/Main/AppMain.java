@@ -3,12 +3,16 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
+
+import Auxiliares.Validacao;
+
 import java.util.ArrayList;
 import Clientes.*;
+import Menus.*;
 
 public class AppMain {
     
-    public static ClientePF criarClientePF() {
+    public static ClientePF criarClientePF(Seguradora seguradora) {
         Scanner scanner = new Scanner(System.in);
 
 
@@ -47,7 +51,7 @@ public class AppMain {
         System.out.println("Digite o cpf");
         String cpf = scanner.nextLine();
         
-        ClientePF novoCliente = new ClientePF(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cpf, dataNascimento);
+        ClientePF novoCliente = new ClientePF(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cpf, dataNascimento, seguradora);
 
         
     
@@ -55,7 +59,7 @@ public class AppMain {
         
     }
 
-    public static ClientePJ criarClientePJ() {
+    public static ClientePJ criarClientePJ(Seguradora seguradora) {
         Scanner scanner = new Scanner(System.in);
         String lixo;
 
@@ -99,7 +103,7 @@ public class AppMain {
         int quantidadeDeFuncionarios = scanner.nextInt();
         lixo = scanner.nextLine();
         
-        ClientePJ novoCliente = new ClientePJ(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cnpj, dataFundacao, quantidadeDeFuncionarios);
+        ClientePJ novoCliente = new ClientePJ(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cnpj, dataFundacao, quantidadeDeFuncionarios, seguradora);
         System.out.println(novoCliente.toString());
     
         return novoCliente;
@@ -118,11 +122,15 @@ public class AppMain {
         String email = scanner.nextLine();
         System.out.println("Digite o endereço");
         String endereco = scanner.nextLine();
-        
-        Seguradora novaSeguradora = new Seguradora(nomeSeguradora, telefone, email, endereco);
-        
+        System.out.println("Digite o cnpj da seguradora");
+        String cnpj = scanner.nextLine();
 
-        return novaSeguradora;
+        if (Validacao.validarCNPJ(cnpj)) {
+            Seguradora novaSeguradora = new Seguradora(nomeSeguradora, telefone, email, endereco, cnpj);
+            return novaSeguradora;
+        }
+        
+        return null;
     }
 
     public static Veiculo criarNovoVeiculo() {
@@ -195,10 +203,10 @@ public class AppMain {
         System.out.println("****************");
 
 
-        Seguradora seguradoraPreCadastrado = new Seguradora("Ale Seixas", "(19) 993423301", "a260533@dac.unicamp.br", "campinas");
+        Seguradora seguradoraPreCadastrado = new Seguradora("Ale Seixas", "(19) 993423301", "a260533@dac.unicamp.br", "campinas", "28.884.061/0001-88");
         listaSeguradorasDoSistema.add(seguradoraPreCadastrado);
-        ClientePF clientePF = new ClientePF("joao", "unicamp", dataLicenca, "superior", "masculino","alta", "104.337.449-36", data1);
-        ClientePJ clientePJ = new ClientePJ("Oficina Simas Turbo", "Unicamp", dataLicenca, "fundamental", "masculino", "alta", "55.889.662/0001-56", data2, 100);
+        ClientePF clientePF = new ClientePF("joao", "unicamp", dataLicenca, "superior", "masculino","alta", "104.337.449-36", data1, seguradoraPreCadastrado);
+        ClientePJ clientePJ = new ClientePJ("Oficina Simas Turbo", "Unicamp", dataLicenca, "fundamental", "masculino", "alta", "55.889.662/0001-56", data2, 100, seguradoraPreCadastrado);
         seguradoraPreCadastrado.cadastrarCliente(clientePJ);
         seguradoraPreCadastrado.cadastrarCliente(clientePF);
         Veiculo veiculo1 = new Veiculo("FDP-0000", "Ford", "Mustang Shelby", 2020);
@@ -288,12 +296,12 @@ public class AppMain {
                         }
 
                         if(opcao == 1) {
-                            ClientePF clientePf = criarClientePF();
+                            ClientePF clientePf = criarClientePF(seguradoraParaCadastrar);
                             cadastrarCliente(clientePf, seguradoraParaCadastrar);
                             
                             
                         } else if (opcao == 2) {
-                            ClientePJ clientePj = criarClientePJ();
+                            ClientePJ clientePj = criarClientePJ(seguradoraParaCadastrar);
                             cadastrarCliente(clientePj, seguradoraParaCadastrar);
                             
                         } 
@@ -303,8 +311,13 @@ public class AppMain {
                 } else if (operacao == MenuCadastro.CADASTRAR_SEGURADORA.operacao) {
                     
                     Seguradora novaSeguradora = criarSeguradora();
-                    listaSeguradorasDoSistema.add(novaSeguradora);
-                    System.out.println("Seguradora cadastrada com sucesso ao sistema!");
+                    if(novaSeguradora != null) {
+                        listaSeguradorasDoSistema.add(novaSeguradora);
+                        System.out.println("Seguradora cadastrada com sucesso ao sistema!");
+                    } else {
+                        System.out.println("CNPJ inválido. Tente novamente");
+                    }
+                    
 
                 } else if (operacao == MenuCadastro.CADASTRAR_VEICULO.operacao) {
                     Seguradora seguradoraCliente = null;
