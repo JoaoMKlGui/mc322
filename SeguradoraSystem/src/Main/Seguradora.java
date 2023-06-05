@@ -213,4 +213,8 @@ public class Seguradora {
 
     }
 
+    public String toString() {
+        return "Nome: " + this.nome + "\n" + "CNPJ: " + this.cnpj + "\n" + "Email: " + this.email + "\n" + "Telefone: " + this.telefone + "\n" + "Endereco: " + this.telefone + "\n";
+    }
+
 }

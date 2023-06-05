@@ -69,7 +69,7 @@ public class Sinistro {
 
     @Override 
     public String toString() {
-        return "Nome do cliente: " + this.condutor.getNome() + "\n" + "Modelo do veículo: " + this.veiculo.getModelo() + "\n" + "Placa do veículo: " + this.veiculo.getPlaca() + "\n" + "Seguradora: " + this.seguro.getSeguradora().getNome() + "\n" + "Data: " + this.data + "\n"  + "Endereço: " + this.endereco + "\n" + "ID do sinistro: " + this.id + "\n";
+        return "Nome do condutor: " + this.condutor.getNome() + "\n" + "Modelo do veículo: " + this.veiculo.getModelo() + "\n" + "Placa do veículo: " + this.veiculo.getPlaca() + "\n" + "Seguradora: " + this.seguro.getSeguradora().getNome() + "\n" + "Data: " + this.data + "\n"  + "Endereço: " + this.endereco + "\n" + "ID do sinistro: " + this.id + "\n";
     }
 
 }

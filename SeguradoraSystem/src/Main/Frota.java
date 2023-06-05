@@ -28,4 +28,8 @@ public class Frota {
     public void removerVeiculo(Veiculo veiculo) {
         this.listaVeiculos.remove(veiculo);
     }
+
+    public String toString() {
+        return "Código: " + this.code + "\n";
+    }
 }

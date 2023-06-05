@@ -181,8 +181,10 @@ public class AppMain {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int operacao;
-        String lixo;
+        int operacao; //operação escolhida pelo usuário
+        String lixo; // no scanner, quando eu recolho um número, ele não recolhe o \n, então o lixo serve pra recolher até a próxima linha 
+
+
         ArrayList<Seguradora> listaSeguradorasDoSistema = new ArrayList<Seguradora>();
 
 
@@ -213,9 +215,7 @@ public class AppMain {
         Veiculo veiculo2 = new Veiculo("OFF-0000", "Ford", "Maverick", 1975);
         clientePF.adicionarVeiculo(veiculo1);
         clientePJ.adicionarVeiculo(veiculo2);
-        seguradoraPreCadastrado.gerarSinistro("01/05/2023", "Unicamp", seguradoraPreCadastrado, veiculo1, clientePF);
-        seguradoraPreCadastrado.gerarSinistro("01/05/2023", "Unicamp", seguradoraPreCadastrado, veiculo2, clientePJ);
-
+    
         System.out.println(clientePF);
         System.out.println(clientePJ);
 
@@ -223,17 +223,6 @@ public class AppMain {
             System.out.println(cliente);
         }
 
-        seguradoraPreCadastrado.visualizarSinistro("Oficina Simas Turbo");
-
-        for(Sinistro sinistro : seguradoraPreCadastrado.listarSinistros()) {
-            System.out.println(sinistro);
-        }
-
-        System.out.println(seguradoraPreCadastrado.calcularReceita());
-
-        Veiculo veiculo3 = new Veiculo("OIE-0000", "Ferrari", "F40", 1995);
-        clientePF.adicionarVeiculo(veiculo3);
-        clientePF.setValorSeguro(seguradoraPreCadastrado.calculaPrecoSeguroCliente(clientePF));
         System.out.println(seguradoraPreCadastrado.calcularReceita());
 
         while(true) {
@@ -244,6 +233,7 @@ public class AppMain {
             System.out.println("4 - GERAR SINISTRO");
             System.out.println("5 - TRANSFERIR SEGURO");
             System.out.println("6 - CALCULAR RECEITA SEGURADORA");
+            System.out.println("7 - GERENCIAR SEGUROS");
             System.out.println("0 - SAIR");
             System.out.println();
             System.out.println("Digite o número da operação desejada");
@@ -798,9 +788,27 @@ public class AppMain {
                 } else {
                     System.out.println("A receita da seguradora é: " + seguradoraReceita.calcularReceita());
                 }
+            } else if (operacao == MenuOperacoes.GERENCIAR_SEGUROS.operacao) {
+                System.out.println();
+                System.out.println("Qual dessas ações você deseja realizar?");
+                System.out.println("**************");
+                System.out.println("1 - Cadastrar seguro");
+                System.out.println("2 - Cancelar Seguro");
+                
+                operacao = scanner.nextInt();
+                lixo = scanner.nextLine();
+
+                if(operacao == 1) {
+                    System.out.println();
+                    System.out.println("Digite 1 caso queira um seguro para pessoa PJ e digite 2 caso queria seguro para uma PF");
+                    operacao = scanner.nextInt();
+                    lixo = scanner.nextLine();
+                }
+                
+
             } else if (operacao == MenuOperacoes.SAIR.operacao) {
                 break;
-            }
+            } 
     
         }
 

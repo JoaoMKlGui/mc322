@@ -100,7 +100,7 @@ public class ClientePJ extends Cliente {
 
     @Override
     public String toString() {
-        return super.toString() + "CNPJ: " + this.cnpj + "\n" + "Data de Fundação: " + String.valueOf(this.dataFundacao.get(Calendar.DAY_OF_MONTH)) + "/" + String.valueOf(this.dataFundacao.get(Calendar.MONTH) + 1) + "/" + String.valueOf(this.dataFundacao.get(Calendar.YEAR)) + "\n";
+        return super.toString() + "CNPJ: " + this.cnpj + "\n" + "Data de Fundação: " + String.valueOf(this.dataFundacao.get(Calendar.DAY_OF_MONTH)) + "/" + String.valueOf(this.dataFundacao.get(Calendar.MONTH) + 1) + "/" + String.valueOf(this.dataFundacao.get(Calendar.YEAR)) + "\n" + "Quantidade de funcionários: " + this.quantidadeFuncionarios + "\n";
     }
 
 }

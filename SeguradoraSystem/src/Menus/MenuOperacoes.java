@@ -7,6 +7,7 @@ public enum MenuOperacoes {
     GERAR_SINISTRO(4),
     TRANSFERIR_SEGURO(5),
     CALCULAR_RECEITA(6),
+    GERENCIAR_SEGUROS(7)
     SAIR(0);
 
 

@@ -71,5 +71,10 @@ public class Condutor {
     public void adicionarSinistro(Sinistro sinistro) {
         this.listaSinistros.add(sinistro);
     }
+
+    public String toString() {
+        return "CPF: " + this.cpf + "\n" + "Nome: " + this.nome + "\n" + "Telefone: " + this.telefone + "\n" + "Endereco: " + this.endereco + "\n" + "Email: " + this.email + "\n";
+    }
+    
 }
 

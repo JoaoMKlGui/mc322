@@ -63,4 +63,9 @@ public class SeguroPJ extends Seguro {
     public void transferirSeguro(ClientePJ clienteQueVaiReceber) {
         this.cliente = clienteQueVaiReceber;
     }
+
+    public String toString() {
+        return super.toString() + "Cliente: " + this.cliente.getNome() + "\n";
+    }
+
 }

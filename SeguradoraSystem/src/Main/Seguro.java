@@ -100,6 +100,10 @@ public abstract class Seguro {
         return listaSinistrosDoCondutor;
     }
 
+    public String toString() {
+        return "ID: " + this.id + "\n" + "Seguradora: " + this.seguradora.getNome() + "\n" + "Valor mensal: " + this.valorMensal + "\n";
+    }
+
     protected abstract double calculaValor();  
     protected abstract boolean autorizarCondutor(Condutor condutorAutorizar);
     protected abstract boolean desautorizarCondutor(Condutor condutorDesautorizar);

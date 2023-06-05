@@ -80,4 +80,8 @@ public class SeguroPF extends Seguro {
         this.cliente = clienteQueVaiReceber; //basicamente um setter, mas fazendo uma função dedicada a só isso pra facilitar a leitura do código
     }
 
+    public String toString() {
+        return super.toString() + "Cliente: " + this.cliente.getNome() + "\n" + "Veiculo: " + this.veiculo.getPlaca() + "\n";
+    }
+
 }
