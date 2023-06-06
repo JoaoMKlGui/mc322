@@ -18,7 +18,7 @@ public class ClientePJ extends Cliente {
 
     public ClientePJ(String nome, String endereco, Calendar dataLicenca, String educacao, String genero, String classeEco, String cnpj, Calendar dataFundacao, int quantidadeFuncionarios, Seguradora seguradora) {
         super(nome, endereco, dataLicenca, educacao, genero, classeEco, seguradora);
-        this.cnpj = cnpj;
+        this.cnpj = cnpj.replaceAll("[^0-9]+", "");
         this.setDataFundacao(dataFundacao);
         this.setQuantidadeFuncionarios(quantidadeFuncionarios);
     }

@@ -1,6 +1,10 @@
 package Main;
 import java.util.HashMap;
 import java.util.Map;
+
+import Auxiliares.Datas;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import Clientes.Cliente;
 import Clientes.ClientePF;
@@ -13,6 +17,7 @@ public class Seguradora {
     private String email;
     private String endereco;
     private ArrayList<Seguro> listaSeguros = new ArrayList<Seguro>();
+    private ArrayList<Sinistro> listaSinistros = new ArrayList<Sinistro>();
     private Map<String, Cliente> listaClientes = new HashMap<String, Cliente>(); //a chave deste map será o cpf ou cnpj do cliente
 
     public Seguradora(String nome, String telefone, String email, String endereco, String cnpj) {
@@ -59,6 +64,49 @@ public class Seguradora {
         return this.endereco;
     }
 
+    public ArrayList<Sinistro> listarSinistros() {
+        return this.listaSinistros;
+    }
+
+    public Sinistro procurarSinistro(int id) {
+        Sinistro sinistro = null;
+
+        for (Sinistro s : listaSinistros) {
+            if (s.getID() == id) {
+                sinistro = s;
+                break;
+            }
+        }
+
+        return sinistro;
+    }
+
+    public boolean removerSinistro(int id) {
+        Sinistro sinistro = procurarSinistro(id);
+
+        if (sinistro == null) {
+            return false;
+        } 
+
+        this.listaSinistros.remove(sinistro);
+        return true;
+    
+    }
+
+    public ArrayList<Sinistro> listarSinistrosPorCondutor(String cpf) {
+
+        ArrayList<Sinistro> listaSinistrosDoCondutor = new ArrayList<Sinistro>();
+
+        for (Sinistro sinistro : listaSinistros) {
+            if (sinistro.getCondutor().getCpf().equals(cpf)) {
+                listaSinistrosDoCondutor.add(sinistro);
+            }
+        }
+
+        return listaSinistrosDoCondutor;
+    }
+
+
     public boolean cadastrarCliente(ClientePF cliente) {
         if(listaClientes.containsKey(cliente.getCPF())) {
             System.out.println("O cliente já existe na base de dados!");
@@ -102,6 +150,10 @@ public class Seguradora {
         System.out.println(cliente.toString());
     }
 
+    public Cliente procurarCliente(String cpfOUcnpj) {
+        return this.listaClientes.get(cpfOUcnpj);
+    }
+
     public void visualizarClientePJ(String cnpj) {
         Cliente cliente = this.listaClientes.get(cnpj);
         System.out.println(cliente.toString());
@@ -120,11 +172,8 @@ public class Seguradora {
         this.listaSeguros.add(novoSeguro);
     }
 
-    public void cancelarSeguro(SeguroPF seguro) {
-        this.listaSeguros.remove(seguro);
-    }
-
-    public void cancelarSeguro(SeguroPJ seguro) {
+    public void cancelarSeguro(Seguro seguro) {
+        seguro.setDataFim(Datas.converteLocalDateParaCalendar(LocalDate.now()));
         this.listaSeguros.remove(seguro);
     }
 
@@ -191,9 +240,9 @@ public class Seguradora {
     public double calcularReceita() {
         double receita = 0;
 
-        for(Cliente cliente : listaClientes.values()) {
+        for(Seguro seguro: listaSeguros) {
 
-            receita+= cliente.getValorSeguro();
+            receita+= seguro.getValorMensal();
             
         }
 

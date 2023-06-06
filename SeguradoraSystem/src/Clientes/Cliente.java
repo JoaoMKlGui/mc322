@@ -12,7 +12,6 @@ public abstract class Cliente {
     private String genero;
     private String classeEconomica;
     private ArrayList<Veiculo> listaVeiculos = new ArrayList<Veiculo>();
-    private double valorSeguro;
     private Seguradora seguradoraCliente;
 
     public Cliente(String nome, String endereco, Calendar dataLicenca, String educacao, String genero, String classeEconomica, Seguradora seguradora) {
@@ -79,15 +78,6 @@ public abstract class Cliente {
 
     public String getClasseEco() {
         return this.classeEconomica;
-    }
-    
-    public double getValorSeguro() {
-        
-        return valorSeguro;
-    }
-
-    public void setValorSeguro(double valorSeguro) {
-        this.valorSeguro = valorSeguro;
     }
 
     public String visualizarVeiculos() {

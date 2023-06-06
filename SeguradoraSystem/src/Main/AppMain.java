@@ -51,10 +51,10 @@ public class AppMain {
         System.out.println("Digite o cpf");
         String cpf = scanner.nextLine();
         
-        ClientePF novoCliente = new ClientePF(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cpf, dataNascimento, seguradora);
-
+        ClientePF novoCliente = new ClientePF(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cpf.replaceAll("[^0-9]+", ""), dataNascimento, seguradora);
         
-    
+        //usar o replace all no cpf do atributo gera uma padronização a ser seguida, o que facilita muita coisa
+
         return novoCliente;
         
     }
@@ -103,9 +103,11 @@ public class AppMain {
         int quantidadeDeFuncionarios = scanner.nextInt();
         lixo = scanner.nextLine();
         
-        ClientePJ novoCliente = new ClientePJ(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cnpj, dataFundacao, quantidadeDeFuncionarios, seguradora);
+        ClientePJ novoCliente = new ClientePJ(nome, endereco, dataLicenca, nivelEducacao, genero, classeEco, cnpj.replaceAll("[^0-9]+", ""), dataFundacao, quantidadeDeFuncionarios, seguradora);
         System.out.println(novoCliente.toString());
-    
+        
+        //usando o replaceAll no cnpj para criar uma padronização
+
         return novoCliente;
 
     }
@@ -200,11 +202,6 @@ public class AppMain {
         Calendar data1 = new GregorianCalendar(2003, 11, 31); //lembrando que mês 11 é dezembro porque o calendar começa a contar do 0
         Calendar data2 = new GregorianCalendar(2001, 8, 11);
 
-        System.out.println("****************");
-        System.out.println("Bem vindo ao App SeguradorasSystem!");
-        System.out.println("****************");
-
-
         Seguradora seguradoraPreCadastrado = new Seguradora("Ale Seixas", "(19) 993423301", "a260533@dac.unicamp.br", "campinas", "28.884.061/0001-88");
         listaSeguradorasDoSistema.add(seguradoraPreCadastrado);
         ClientePF clientePF = new ClientePF("joao", "unicamp", dataLicenca, "superior", "masculino","alta", "104.337.449-36", data1, seguradoraPreCadastrado);
@@ -224,6 +221,11 @@ public class AppMain {
         }
 
         System.out.println(seguradoraPreCadastrado.calcularReceita());
+
+
+        System.out.println("****************");
+        System.out.println("Bem vindo ao App SeguradorasSystem!");
+        System.out.println("****************");
 
         while(true) {
             System.out.println("MENU PRINCIPAL");
@@ -343,7 +345,6 @@ public class AppMain {
                             System.out.println("Cliente não encontrado na base de dados dessa seguradora. Tente novamente");
                         } else {
                             clienteCadastrarVeiculo.adicionarVeiculo(novoVeiculo);
-                            clienteCadastrarVeiculo.setValorSeguro(seguradoraCliente.calculaPrecoSeguroCliente(clienteCadastrarVeiculo)); //atualiza o valor do seguro do cliente
                         }
                     }
 
@@ -360,7 +361,9 @@ public class AppMain {
                 System.out.println("3 - LISTAR SINISTROS POR CLIENTE");
                 System.out.println("4 - LISTAR VEÍCULOS POR CLIENTE");
                 System.out.println("5 - LISTAR VEÍCULOS POR SEGURADORA");
-                System.out.println("6 - VOLTAR");
+                System.out.println("6 - LISTAR SEGUROS DA SEGURADORA");
+                System.out.println("7 - LISTAR CONDUTORES DE UM SEGURO");
+                System.out.println("8 - VOLTAR");
                 System.out.println("Digite o número da operação desejada");
 
                 operacao = scanner.nextInt();
@@ -390,12 +393,11 @@ public class AppMain {
                     }
                     
 
-                } else if (operacao == MenuListar.LISTAR_SINISTROS_CLIENTE.operacao) {
+                } else if (operacao == MenuListar.LISTAR_SINISTROS_CONDUTOR.operacao) {
                     Seguradora seguradoraListar = null;
-                    Cliente clienteListar = null;
 
                     System.out.println("****************");
-                    System.out.println("Por favor digite o nome da seguradora que você deseja listar os clientes");
+                    System.out.println("Por favor digite o nome da seguradora que você deseja listar os sinistros do condutor");
                     String nomeSeguradora = scanner.nextLine();
                     for(Seguradora seguradora : listaSeguradorasDoSistema) {
                         if (seguradora.getNome().equals(nomeSeguradora)) {
@@ -407,26 +409,11 @@ public class AppMain {
                     if(seguradoraListar == null) {
                         System.out.println("Seguradora não encontrada na base de dados. Verifique o nome e tente novamente");
                     } else {
-                        System.out.println("Qual o nome do cliente que você deseja listar os sinistros?");
-                        String nomeClienteListar = scanner.nextLine();
+                        System.out.println("Qual o nome do cpf que você deseja listar os sinistros?");
+                        String cpf = scanner.nextLine();
 
-                        for(Cliente cliente : seguradoraListar.listarClientes()) {
-                            if(cliente.getNome().equals(nomeClienteListar)) {
-                                clienteListar = cliente;
-                                break;
+                        seguradoraListar.listarSinistrosPorCondutor(cpf.replaceAll("[^0-9]+", ""));
 
-                            }
-                        }
-
-                        if(clienteListar == null) {
-                            System.out.println("Cliente não encontrado na base de dados, tente outro nome ou verifique as informações");
-                        } else {
-
-                            for(Sinistro sinistroCliente : seguradoraListar.listarSinistrosPorCliente(clienteListar)) {
-                                System.out.println(sinistroCliente.toString());
-                            }
-
-                        }
                     }
 
                 } else if (operacao == MenuListar.LISTAR_SINISTROS_POR_SEGURADORA.operacao) {
@@ -550,8 +537,51 @@ public class AppMain {
                         System.out.println(veiculo.toString());
                     }
 
-                } else {
-                    //faz nada
+                } else if (operacao == MenuListar.LISTAR_SEGUROS.operacao) {
+                    Seguradora seguradoraListar = null;
+                    System.out.println("Digite o nome da seguradora");
+                    String nomeSeguradora = scanner.nextLine();
+                    
+                    for(Seguradora seguradora : listaSeguradorasDoSistema) {
+                        if (seguradora.getNome().equals(nomeSeguradora)) {
+                            seguradoraListar = seguradora;
+                            break;
+                        }
+                    }
+
+                    if(seguradoraListar == null) {
+                        System.out.println("Seguradora não encontrada");
+                    } else {
+
+                        for(Seguro seguro : seguradoraListar.listarSeguros()) {
+                            System.out.println(seguro.toString());
+                        }
+
+                    }   
+
+                } else if (operacao == MenuListar.LISTAR_CONDUTORES.operacao) {
+                    Seguradora seguradoraListar = null;
+                    System.out.println("Digite o nome da seguradora");
+                    String nomeSeguradora = scanner.nextLine();
+                    
+                    for(Seguradora seguradora : listaSeguradorasDoSistema) {
+                        if (seguradora.getNome().equals(nomeSeguradora)) {
+                            seguradoraListar = seguradora;
+                            break;
+                        }
+                    }
+
+                    if(seguradoraListar == null) {
+                        System.out.println("Seguradora não encontrada");
+                    } else {
+
+                        for(Seguro seguro : seguradoraListar.listarSeguros()) {
+                            for (Condutor condutor : seguro.getListaCondutores()) {
+                                System.out.println(condutor.toString());
+                            }
+                        }
+
+                    }   
                 }
 
             } else if (operacao == MenuOperacoes.REMOVER.operacao) {
@@ -613,7 +643,9 @@ public class AppMain {
                         lixo = scanner.nextLine();
 
                         if(!seguradoraRemover.removerSinistro(id)) {
-                            System.out.println("Tente novamente");
+                            System.out.println("Sinistro não encontrado. Tente novamente");
+                        } else {
+                            System.out.println("Sinistro removido com sucesso");
                         }
                     }
 
@@ -665,8 +697,10 @@ public class AppMain {
 
             } else if(operacao == MenuOperacoes.GERAR_SINISTRO.operacao) {
                 Seguradora seguradoraSinistro = null;
+                Seguro seguroSinistro = null;
                 System.out.println("Digite o nome da seguradora que deseja gerar e cadastrar o sinistro");
                 String nomeSeguradora = scanner.nextLine();
+
                 for(Seguradora seguradora : listaSeguradorasDoSistema) {
                     if(seguradora.getNome().equals(nomeSeguradora)) {
                         seguradoraSinistro = seguradora;
@@ -678,49 +712,84 @@ public class AppMain {
                     System.out.println("Seguradora não encontrada na base de dados. Verifique o nome e tente novamente");
                 } else {
 
-                    Cliente clienteSinistro = null;
-                    System.out.println("Digite o nome do cliente");
-                    String nomeCliente = scanner.nextLine();
-                    for(Cliente cliente : seguradoraSinistro.listarClientes()) {
-                        if(cliente.getNome().equals(nomeCliente)) {
-                            clienteSinistro = cliente;
+                    System.out.println("Digite o ID do seguro");
+                    int id  = scanner.nextInt();
+                    lixo = scanner.nextLine();
+
+                    for (Seguro seguro : seguradoraSinistro.listarSeguros()) {
+                        if(seguro.getID() == id) {
+                            seguroSinistro = seguro;
                             break;
                         }
                     }
-
-                    if(clienteSinistro == null) {
-                        System.out.println("Cliente não encontrado na base de dados. Verifique o nome ou a seguradora e tente novamente");
+                    
+                    if (seguroSinistro == null) {
+                        System.out.println("Seguro não encontrado, tente novamente");
                     } else {
-                        Veiculo veiculoSinistro = null;
+                        Condutor condutorSinistro = null;
 
-                        System.out.println("Digite a data");
-                        String data = scanner.nextLine();
-                        System.out.println("Digite o endereço");
-                        String endereco = scanner.nextLine();
-                        System.out.println("Digite a placa do veículo");
-                        String placa = scanner.nextLine();
+                        System.out.println("Digite o cpf do condutor");
 
-                        for(Veiculo veiculo : clienteSinistro.getVeiculos()) {
-                            if(veiculo.getPlaca().equals(placa)) {
-                                veiculoSinistro = veiculo;
+                        String cpf = scanner.nextLine();
+
+                        for(Condutor condutor : seguroSinistro.getListaCondutores()) {
+                            if(condutor.getCpf().equals(cpf)) {
+                                condutorSinistro = condutor;
                                 break;
                             }
                         }
 
-                        if(veiculoSinistro == null) {
-                            System.out.println("Veículo não cadastrado ainda. Por favor cadastre-o");
-
+                        if(condutorSinistro == null) {
+                            System.out.println("Cliente não encontrado na base de dados. Verifique o nome ou a seguradora e tente novamente");
                         } else {
+                            
 
-                            seguradoraSinistro.gerarSinistro(data, endereco, seguradoraSinistro, veiculoSinistro, clienteSinistro);
+                            Veiculo veiculoSinistro = null;
+
+                            System.out.println("Digite a data");
+                            String data = scanner.nextLine();
+                            System.out.println("Digite o endereço");
+                            String endereco = scanner.nextLine();
+                            System.out.println("Digite a placa do veículo");
+                            String placa = scanner.nextLine();
+                            
+                            if (seguroSinistro instanceof SeguroPJ) {
+
+                                for (Veiculo veiculo : ((SeguroPJ)seguroSinistro).getFrota().getListaVeiculos()) {
+                                    if (veiculo.getPlaca().equals(placa)) {
+                                        veiculoSinistro = veiculo;
+                                        break;
+                                    }
+                                }
+
+                                if (veiculoSinistro == null) {
+                                    System.out.println("Veículo não encontrado na frota seguradad");
+                                } else {
+                                    seguroSinistro.gerarSinistro(data, endereco, seguroSinistro, veiculoSinistro, condutorSinistro);
+                                    System.out.println("Sinistro gerado com sucesso");
+                                }
+
+                            }
+
+                            else {
+
+                                veiculoSinistro = ((SeguroPF)seguroSinistro).getVeiculo();
+    
+                                seguroSinistro.gerarSinistro(data, endereco, seguroSinistro, veiculoSinistro, condutorSinistro);
+                                System.out.println("Sinistro gerado com sucesso");
+                                
+                            }
+
+                            
                         }
                     }
+
+                    
                     
                 }
 
             } else if(operacao == MenuOperacoes.TRANSFERIR_SEGURO.operacao) {
-                Cliente clienteQueVaiTransferir = null;
-                Cliente clienteQueVaiReceber = null;
+
                 Seguradora seguradoraTransferir = null;
 
                 System.out.println("Digite o nome da seguradora dos clientes que realizarão a transferência");
@@ -737,36 +806,86 @@ public class AppMain {
                     System.out.println("Seguradora não encontrada na base de dados. Verifique o nome e tente novamente");
                 } else {
 
-                    System.out.println("Digite o nome do cliente que vai transferir o seguro");
-                    String nomeClienteTransferir = scanner.nextLine();
+                    System.out.println("Você deseja transferir um seguro PF ou um seguro PJ");
+                    System.out.println("Digite 1 para PF e digite 2 para PJ");
+                    
+                    int opcaoSeguro = scanner.nextInt();
+                    lixo = scanner.nextLine();
 
-                    for(Cliente cliente : seguradoraTransferir.listarClientes()) {
-                        if(cliente.getNome().equals(nomeClienteTransferir)) {
-                            clienteQueVaiTransferir = cliente;
-                            break;
-                        }
-                    }
+                    if(opcaoSeguro == 1) {
 
-                    if(clienteQueVaiTransferir == null) {
-                        System.out.println("Cliente não encontrado nessa seguradora. Verifique os dados e tente novamente");
-                    } else {
-
-                        System.out.println("Digite o nome do cliente que irá receber");
-                        String nomeClienteReceber = scanner.nextLine();
+                        Cliente clienteQueVaiReceberPF = null;
+                        Seguro seguroTransferido = null;
                         
-                        for(Cliente cliente : seguradoraTransferir.listarClientes()) {
-                            if(cliente.getNome().equals(nomeClienteReceber)) {
-                                clienteQueVaiReceber = cliente;
-                                break;
+                        System.out.println("Digite o CPF do cliente");
+                        String cpf = scanner.nextLine();
+
+                        clienteQueVaiReceberPF = seguradoraTransferir.procurarCliente(cpf.replaceAll("[^0-9]+", ""));
+
+                        if (clientePF == null) {
+                            System.out.println("Cliente não encontrado");
+                        } else {
+                            System.out.println("Digite o ID do seguro que será transferido");
+                            int id = scanner.nextInt();
+                            lixo = scanner.nextLine();
+
+                            for (Seguro seguro : seguradoraTransferir.listarSeguros()) {
+                                if (seguro.getID() == id) {
+                                    seguroTransferido = seguro;
+                                    break;
+                                }
                             }
+
+                            if (seguroTransferido == null) {
+                                System.out.println("Seguro não encontrado");
+
+                            } else {
+
+                                ((SeguroPF) seguroTransferido).transferirSeguro((ClientePF)clienteQueVaiReceberPF);
+                                System.out.println("Seguro transferido com sucesso");
+
+                            }
+
                         }
 
-                            if(clienteQueVaiReceber == null) {
-                                System.out.println("Cliente não encontrado nessa seguradora. Verifique os dados e tente novamente");
-                            } else {
-                                seguradoraTransferir.transferirSeguro(clienteQueVaiTransferir, clienteQueVaiReceber);
+                    } else if (opcaoSeguro == 2) {
+                        Cliente clienteQueVaiReceberPJ = null;
+                        Seguro seguroTransferido = null;
+                        
+                        System.out.println("Digite o CNPJ do cliente");
+                        String cnpj = scanner.nextLine();
+
+                        clienteQueVaiReceberPJ = seguradoraTransferir.procurarCliente(cnpj.replaceAll("[^0-9]+", ""));
+
+                        if (clientePF == null) {
+                            System.out.println("Cliente não encontrado");
+                        } else {
+                            System.out.println("Digite o ID do seguro que será transferido");
+                            int id = scanner.nextInt();
+                            lixo = scanner.nextLine();
+
+                            for (Seguro seguro : seguradoraTransferir.listarSeguros()) {
+                                if (seguro.getID() == id) {
+                                    seguroTransferido = seguro;
+                                    break;
+                                }
                             }
+
+                            if (seguroTransferido == null) {
+                                System.out.println("Seguro não encontrado");
+
+                            } else {
+
+                                ((SeguroPJ) seguroTransferido).transferirSeguro((ClientePJ)clienteQueVaiReceberPJ);
+                                System.out.println("Seguro transferido com sucesso");
+
+                            }
+
+                        }
+                    } else {
+                        System.out.println("Digite uma opção válida");
                     }
+
                 }
             
 
@@ -797,12 +916,153 @@ public class AppMain {
                 
                 operacao = scanner.nextInt();
                 lixo = scanner.nextLine();
+                int opcaoCliente;
+                Seguradora seguradoraCadastroSeguro = null;
 
                 if(operacao == 1) {
                     System.out.println();
                     System.out.println("Digite 1 caso queira um seguro para pessoa PJ e digite 2 caso queria seguro para uma PF");
-                    operacao = scanner.nextInt();
+                    opcaoCliente = scanner.nextInt();
                     lixo = scanner.nextLine();
+
+                    if (opcaoCliente == 1) {
+                        System.out.println("Digite o nome da seguradora");
+                        String nomeSeguradora = scanner.nextLine();
+                        
+                        for (Seguradora seguradora : listaSeguradorasDoSistema) {
+                            if(seguradora.getNome().equals(nomeSeguradora)) {
+                                seguradoraCadastroSeguro = seguradora;
+                                break;
+                            }
+                        }
+
+                        if (seguradoraCadastroSeguro == null) {
+                            System.out.println("Seguradora com o nome especificado não encontrada. Digite novamente ou cadastre a seguradora");
+                        } else {
+                            System.out.println("Digite o CPF do cliente");
+                            String cpfCliente = scanner.nextLine();
+                            Cliente clienteSeguro = null;
+
+                            clienteSeguro = seguradoraCadastroSeguro.procurarCliente(cpfCliente);
+
+                            if (clienteSeguro == null) {
+                                System.out.println("Cliente não encontrado, verifique os dados");
+                            } else {
+                                System.out.println("Digite a placa do veículo do cliente que você deseja segurar");
+                                String placa = scanner.nextLine();
+
+                                Veiculo veiculoSegurar = null;
+
+                                for (Veiculo veiculo : clienteSeguro.getVeiculos()) {
+                                    if (veiculo.getPlaca().equals(placa)) {
+                                        veiculoSegurar = veiculo;
+                                        break;
+                                    }
+                                }
+
+                                if (veiculoSegurar != null) {
+                                    seguradoraCadastroSeguro.gerarSeguro((ClientePF)clienteSeguro, veiculoSegurar);
+                                    System.out.println("Seguro gerado com sucesso!");
+                                } else {
+                                    System.out.println("Veículo não encontrado, verifique as infos");
+                                }
+
+                            } 
+
+                            
+                        
+
+
+                        }
+
+                    } else if (opcaoCliente == 2) {
+                        System.out.println("Digite o nome da seguradora");
+                        String nomeSeguradora = scanner.nextLine();
+                        
+                        for (Seguradora seguradora : listaSeguradorasDoSistema) {
+                            if(seguradora.getNome().equals(nomeSeguradora)) {
+                                seguradoraCadastroSeguro = seguradora;
+                                break;
+                            }
+                        }
+
+                        if (seguradoraCadastroSeguro == null) {
+                            System.out.println("Seguradora com o nome especificado não encontrada. Digite novamente ou cadastre a seguradora");
+                        } else {
+                            System.out.println("Digite o CNPJ do cliente");
+                            String cnpjCliente = scanner.nextLine();
+                            Cliente clienteSeguro = null;
+
+                            clienteSeguro = seguradoraCadastroSeguro.procurarCliente(cnpjCliente);
+    
+
+                            if (clienteSeguro == null) {
+                                System.out.println("Cliente não encontrado, verifique os dados");
+                            } else {
+                                System.out.println("Digite o código da frota que você deseja segurar");
+                                String codeFrota = scanner.nextLine();
+
+                                Frota frotaSegurar = null;
+
+                                for (Frota frota : ((ClientePJ)clienteSeguro).getListaFrotas()) {
+                                    if (frota.getCode().equals(codeFrota)) {
+                                        frotaSegurar = frota;
+                                        break;
+                                    }
+                                }
+
+                                if (frotaSegurar != null) {
+                                    seguradoraCadastroSeguro.gerarSeguro((ClientePJ)clienteSeguro, frotaSegurar);
+                                    System.out.println("Seguro gerado com sucesso!");
+                                } else {
+                                    System.out.println("Frota não encontrada, verifique as infos");
+                                }
+
+                            } 
+
+                        }
+                    } else {
+                        System.out.println("Digite uma opção válida!");
+                    }
+
+                } else if (operacao == 2) { 
+                    System.out.println("Digite o nome da seguradora");
+                    String nomeSeguradora = scanner.nextLine();
+                    Seguradora seguradoraCancelarSeguro = null;
+                    
+                    for(Seguradora seguradora : listaSeguradorasDoSistema) {
+                        if (seguradora.getNome().equals(nomeSeguradora)) {
+                            seguradoraCancelarSeguro = seguradora;
+                            break;
+                        }
+                    }
+                    
+                    if(seguradoraCancelarSeguro == null) {
+                        System.out.println("Seguradora não encontrada no sistema. Verifique o nome");
+                    } else {
+                        System.out.println("Digite o ID do seguro");
+                        int id = scanner.nextInt();
+                        lixo = scanner.nextLine();
+                        Seguro seguroCancelar = null;
+                        
+                        for (Seguro seguro : seguradoraCancelarSeguro.listarSeguros()) {
+                            if(seguro.getID() == id) { //os dois são ints então posso usar o ==
+                                seguroCancelar = seguro;
+                                break;
+                            }
+                        }
+
+                        if(seguroCancelar == null) {
+                            System.out.println("Seguro não encontrado, por favor verifique o ID e tente novamente");
+                        } else {
+                            seguradoraCancelarSeguro.cancelarSeguro(seguroCancelar);
+                            System.out.println("Seguro cancelado com sucesso");
+                        }
+
+                    }
+
+                } else {
+                    System.out.println("Digite uma opção válida");
                 }
                 
 
