@@ -10,7 +10,7 @@ public class Validacao {
         boolean todosCharIguais = true;
         String novoCPF;
 
-        novoCPF = cpf.replaceAll("[^0-9]+", ""); //formatando o CPF de XXX.XXX.XXX-XX para XXXXXXXXXXX
+        novoCPF = cpf.replaceAll("[^0-9]+", ""); //formatando o CPF tirando todas as pontuações
 
         if(novoCPF.length() != 11) {
             //todo novoCPF é formado por 11 números, logo, se ele tiver um numero diferente de digitos, não será válido
@@ -77,7 +77,7 @@ public class Validacao {
         boolean todosCharIguais = true;
         String novoCNPJ;
 
-        novoCNPJ = cnpj.replaceAll("[^0-9]+", ""); //formatando o CPF de XXX.XXX.XXX-XX para XXXXXXXXXXX
+        novoCNPJ = cnpj.replaceAll("[^0-9]+", ""); //formatando o CNPJ tirando todas as pontuações
 
         if(novoCNPJ.length() != 14) {
             //todo CNPJ é formado por 14 números, logo, se ele tiver um numero diferente de digitos, não será válido

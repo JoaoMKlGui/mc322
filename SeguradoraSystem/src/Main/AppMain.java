@@ -11,9 +11,12 @@ import Clientes.*;
 import Menus.*;
 
 public class AppMain {
+
+    public static Scanner scanner = new Scanner(System.in);
+    public static String lixo;// no scanner, quando eu recolho um número, ele não recolhe o \n, então o lixo serve pra recolher até a próxima linha 
+
     
     public static ClientePF criarClientePF(Seguradora seguradora) {
-        Scanner scanner = new Scanner(System.in);
 
 
         String dataLic = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(Calendar.getInstance().getTime());
@@ -60,8 +63,6 @@ public class AppMain {
     }
 
     public static ClientePJ criarClientePJ(Seguradora seguradora) {
-        Scanner scanner = new Scanner(System.in);
-        String lixo;
 
         String dataLic = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(Calendar.getInstance().getTime());
         String[] partes_da_data = dataLic.split("_");
@@ -114,7 +115,6 @@ public class AppMain {
 
 
     public static Seguradora criarSeguradora() {
-        Scanner scanner = new Scanner(System.in);
 
         System.out.println("Digite o nome da seguradora");
         String nomeSeguradora = scanner.nextLine();
@@ -136,7 +136,6 @@ public class AppMain {
     }
 
     public static Veiculo criarNovoVeiculo() {
-        Scanner scanner = new Scanner(System.in);
 
         System.out.println("Digite o modelo do veículo");
         String modelo = scanner.nextLine();
@@ -144,7 +143,7 @@ public class AppMain {
         String marca = scanner.nextLine();
         System.out.println("Digite o ano de fabricação");
         int anoDeFabricacao = scanner.nextInt();
-        String lixo = scanner.nextLine();
+        lixo = scanner.nextLine();
         System.out.println("Digite a placa");
         String placa = scanner.nextLine();
 
@@ -182,9 +181,7 @@ public class AppMain {
 
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         int operacao; //operação escolhida pelo usuário
-        String lixo; // no scanner, quando eu recolho um número, ele não recolhe o \n, então o lixo serve pra recolher até a próxima linha 
 
 
         ArrayList<Seguradora> listaSeguradorasDoSistema = new ArrayList<Seguradora>();
@@ -247,9 +244,11 @@ public class AppMain {
                 System.out.println("****************");
                 System.out.println("MENU CADASTROS");
                 System.out.println("1 - CADASTRAR CLIENTE PF/PJ");
-                System.out.println("2 - CADASTRAR VEÍCULO");
+                System.out.println("2 - CADASTRAR VEÍCULO DE CLIENTE PF");
                 System.out.println("3 - CADASTRAR SEGURADORA");
-                System.out.println("4 - VOLTAR");
+                System.out.println("4 - CADASTRAR NOVA FROTA");
+                System.out.println("5 - CADASTRAR NOVO VEÍCULO EM UMA FROTA");
+                System.out.println("6 - VOLTAR");
                 System.out.println("Digite o número da operação desejada");
 
                 operacao = scanner.nextInt();
@@ -349,6 +348,116 @@ public class AppMain {
                     }
 
 
+                } else if (operacao == MenuCadastro.CADASTRAR_FROTA.operacao) {
+                    Seguradora seguradoraFrota = null;
+                    
+
+                    System.out.println("Digite o nome da seguradora do cliente que possuirá tal frota");
+                    String nomeSeguradora = scanner.nextLine();
+
+                    for(Seguradora seguradora : listaSeguradorasDoSistema) {
+                        if (seguradora.getNome().equals(nomeSeguradora)) {
+                            seguradoraFrota = seguradora;
+                            break;
+                        }
+                    }
+
+                    if (seguradoraFrota == null) {
+                        System.out.println("Nenhuma seguradora com tal nome achada no sistema. Verifique o nome e tente novamente");
+                    } else {
+
+                        System.out.println("Digite o CNPJ do cliente que possuirá a frota");
+                        String cnpj = scanner.nextLine();
+
+                        Cliente clienteFrota = seguradoraFrota.procurarCliente(cnpj); //não preciso formatar utilizando o replaceAll pois o método procurar cliente já faz isso 
+                        
+                        if (clienteFrota == null) {
+                            System.out.println("Cliente não encontrado");
+                        } else {
+
+                            System.out.println("Digite o nome da nova frota ser cadastrada");
+
+                            String nomeNovaFrota = scanner.nextLine();
+                            Frota novaFrota = new Frota(nomeNovaFrota);
+
+                            ((ClientePJ) clienteFrota).cadastrarFrota(novaFrota); 
+
+                            System.out.println("Segue abaixo as informações da nova frota. Guarde tais infos, pois elas poderão ser requisitadas futuramente");
+                            System.out.println(novaFrota.toString());
+                            System.out.println("Frota cadastrada com sucesso");
+
+                        }
+
+                    }
+
+                } else if (operacao == MenuCadastro.ATUALIZAR_FROTA.operacao) {
+                    //primeiro passo : saber a seguradora que o cliente está
+                    
+                    Seguradora seguradoraFrota = null;
+                    
+
+                    System.out.println("Digite o nome da seguradora do cliente que possui tal frota");
+                    String nomeSeguradora = scanner.nextLine();
+
+                    for(Seguradora seguradora : listaSeguradorasDoSistema) {
+                        if (seguradora.getNome().equals(nomeSeguradora)) {
+                            seguradoraFrota = seguradora;
+                            break;
+                        }
+                    }
+
+                    if (seguradoraFrota == null) {
+                        System.out.println("Nenhuma seguradora com tal nome achada no sistema. Verifique o nome e tente novamente");
+                    } else {
+                        //segundo passo: saber qual o cliente da frota
+
+                        System.out.println("Digite o CNPJ do cliente que possui a frota");
+                        String cnpj = scanner.nextLine();
+
+                        Cliente clienteFrota = seguradoraFrota.procurarCliente(cnpj); //não preciso formatar utilizando o replaceAll pois o método procurar cliente já faz isso 
+                        
+                        if (clienteFrota == null) {
+                            System.out.println("Cliente não encontrado");
+                        } else {
+                            //terceiro passo: saber a frota
+
+                            System.out.println("Digite o código da frota");
+
+                            String codigoFrota = scanner.nextLine();
+                            Frota frotaAtualizacao = null;
+
+                            for(Frota frota : ((ClientePJ)clienteFrota).getListaFrotas()) {
+                                if (frota.getCode().equals(codigoFrota)) {
+                                    frotaAtualizacao = frota;
+                                    break;
+                                }
+                            }
+                            
+                            if (frotaAtualizacao == null) {
+                                System.out.println("Nenhuma frota com esse código encontrada");
+                            } else {
+                                //quarto passo: criar o veículo a ser adicionado na frota
+                                
+                                System.out.println("Digite a placa do veículo a ser adicionado");
+                                String placa = scanner.nextLine();
+                                System.out.println("Digite o modelo do veículo");
+                                String modelo = scanner.nextLine();
+                                System.out.println("Digite a marca do veículo");
+                                String marca = scanner.nextLine();
+                                System.out.println("Digite o ano de fabricação do veículo");
+                                int anoFab = scanner.nextInt();
+                                lixo = scanner.nextLine();
+
+                                Veiculo veiculoNovo = new Veiculo(placa, marca, modelo, anoFab);
+
+                                frotaAtualizacao.adicionarVeiculo(veiculoNovo);
+                                System.out.println("Veículo adicionado com sucesso");
+                            }
+
+
+                        }
+
+                    }
                 } else {
                     //ele vai sair do menu e na próxima iteração vai acabar indo pro menu principal de novo
                 }
@@ -582,6 +691,88 @@ public class AppMain {
                         }
 
                     }   
+                } else if (operacao == MenuListar.LISTAR_VEICULOS_FROTA.operacao) {
+                    Seguradora seguradoraListar = null;
+                    System.out.println("Digite o nome da seguradora do cliente que possui a frota");
+                    String nomeSeguradora = scanner.nextLine();
+
+                    for (Seguradora seguradora : listaSeguradorasDoSistema) {
+                        if(seguradora.getNome().equals(nomeSeguradora)) {
+                            seguradoraListar = seguradora;
+                            break;
+                        }
+                    }
+
+                    if (seguradoraListar == null) {
+                        System.out.println("Seguradora não encontrada no sistema");
+                    } else {
+                        System.out.println("Digite o CNPJ do cliente que possui a frota");
+
+                        String cnpj = scanner.nextLine();
+                        Cliente clienteListar = seguradoraListar.procurarCliente(cnpj);
+
+                        if (clienteListar == null) {
+                            System.out.println("Cliente com o CNPJ dado não encontrado");
+                        } else {
+
+                            System.out.println("Digite o código da frota");
+                            String codigoFrota = scanner.nextLine();
+                            Frota frotaListar = null;
+                            
+                            for (Frota frota : ((ClientePJ)clienteListar).getListaFrotas()) {
+                                if (frota.getCode().equals(codigoFrota)) {
+                                    frotaListar = frota;
+                                    break;
+                                }
+                            }
+
+                            if (frotaListar == null) {
+                                System.out.println("Frota não encontrada. Verifique o código");
+                            } else {
+                                for (Veiculo veiculo : frotaListar.getListaVeiculos()) {
+                                    System.out.println(veiculo.toString());
+                                }
+                            }
+
+                        }
+                        
+                    }
+
+                } else if (operacao == MenuListar.LISTAR_FROTAS.operacao) {
+                    Seguradora seguradoraListar = null;
+                    System.out.println("Digite o nome da seguradora do cliente que possui a frota");
+                    String nomeSeguradora = scanner.nextLine();
+
+                    for (Seguradora seguradora : listaSeguradorasDoSistema) {
+                        if(seguradora.getNome().equals(nomeSeguradora)) {
+                            seguradoraListar = seguradora;
+                            break;
+                        }
+                    }
+
+                    if (seguradoraListar == null) {
+                        System.out.println("Seguradora não encontrada no sistema");
+                    } else {
+                        System.out.println("Digite o CNPJ do cliente que possui a frota");
+
+                        String cnpj = scanner.nextLine();
+                        Cliente clienteListar = seguradoraListar.procurarCliente(cnpj);
+                        
+                        if (clienteListar == null) {
+                            System.out.println("Cliente com tal CNPJ não encontrado");
+                        } else {
+
+                            for (Frota frota : ((ClientePJ)clienteListar).getListaFrotas()) {
+                                System.out.println(frota.toString());
+                            }
+
+                        }
+
+                    }
+
+
+                } else {
+                    //faz nada pq ai ele volta
                 }
 
             } else if (operacao == MenuOperacoes.REMOVER.operacao) {

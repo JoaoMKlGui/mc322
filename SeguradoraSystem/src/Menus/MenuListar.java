@@ -8,7 +8,9 @@ public enum MenuListar {
     LISTAR_VEICULOS_SEGURADORA(5),
     LISTAR_SEGUROS(6),
     LISTAR_CONDUTORES(7),
-    VOLTAR(8);
+    LISTAR_VEICULOS_FROTA(8),
+    LISTAR_FROTAS(10),
+    VOLTAR(11);
 
 
     public final int operacao;

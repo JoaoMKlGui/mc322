@@ -151,6 +151,7 @@ public class Seguradora {
     }
 
     public Cliente procurarCliente(String cpfOUcnpj) {
+        cpfOUcnpj = cpfOUcnpj.replaceAll("[^0-9]+", ""); //formatando para não dar conflito 
         return this.listaClientes.get(cpfOUcnpj);
     }
 

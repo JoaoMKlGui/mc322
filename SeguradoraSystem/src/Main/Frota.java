@@ -3,14 +3,20 @@ import java.util.ArrayList;
 
 public class Frota {
     private final String code;
+    private final String nomeFrota;
     private ArrayList<Veiculo> listaVeiculos = new ArrayList<Veiculo>();
 
-    public Frota(String nomeFrota) {
-        this.code = geradorHashCode(nomeFrota);
+    public Frota(String nome) {
+        this.nomeFrota = nome;
+        this.code = geradorHashCode(nome);
     }
     
     private String geradorHashCode(String nomeFrota) {
         return Integer.toString(nomeFrota.hashCode());
+    }
+
+    public String getNomeFrota() {
+        return this.nomeFrota;
     }
 
     public ArrayList<Veiculo> getListaVeiculos() {
@@ -30,6 +36,6 @@ public class Frota {
     }
 
     public String toString() {
-        return "Código: " + this.code + "\n";
+        return "Código: " + this.code + "\n" + "Nome Frota: " + this.nomeFrota + "\n";
     }
 }

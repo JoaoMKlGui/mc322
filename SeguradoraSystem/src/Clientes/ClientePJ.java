@@ -61,6 +61,11 @@ public class ClientePJ extends Cliente {
         this.listaFrotas.add(frotaNova);
     }
 
+    public void cadastraVeiculoNovoFrota(Veiculo veiculo, Frota frota) {
+        frota.adicionarVeiculo(veiculo); //adicionando o veículo à frota desejada
+        this.getVeiculos().add(veiculo); //colocando esse veículo na lista de todos os veículos que estão na responsabilidade do cliente PJ
+    }
+
     public ArrayList<Veiculo> getVeiculosPorFrota(Frota frotaVeiculos) {
         ArrayList<Veiculo> veiculosFrota = new ArrayList<Veiculo>();
 
