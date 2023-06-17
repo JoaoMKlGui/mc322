@@ -4,6 +4,8 @@ import java.util.Calendar;
 
 public class Datas {
     
+    //classe feita para auxiliar na manipulação de datas com calendar
+
     public static String pegarDiaDoNascimento(Calendar dataNascimento) {
         return String.valueOf(dataNascimento.get(Calendar.DAY_OF_MONTH));
     }
@@ -28,4 +30,13 @@ public class Datas {
 
         return novoCalendar;
     }
+
+    public static String converteCalendarParaString(Calendar data) {
+        String dia = String.valueOf(data.get(Calendar.DAY_OF_MONTH));
+        String mes = String.valueOf(data.get(Calendar.MONTH + 1));
+        String ano = String.valueOf(data.get(Calendar.YEAR));
+
+        return ( dia + "/" + mes + "/" + ano );
+    }
+
 }

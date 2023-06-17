@@ -4,6 +4,7 @@ import java.util.GregorianCalendar;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
+import Auxiliares.Datas;
 import Auxiliares.Validacao;
 
 import java.util.ArrayList;
@@ -177,6 +178,20 @@ public class AppMain {
             System.out.println("Nome ou CPF inválidos!");
             System.out.println("Lembre-se que o nome não pode ter nenhum acento, cedilha ou caracteres especiais!");
         }
+    }
+
+    public static Calendar leData() {
+
+        System.out.println("Digite a data no formato DD/MM/YYYY");
+        String[] partesDataString = scanner.nextLine().split("/");
+
+        int ano = Integer.parseInt(partesDataString[0]);
+        int mes = Integer.parseInt(partesDataString[1]) - 1;
+        int dia = Integer.parseInt(partesDataString[2]);
+
+        Calendar dataFinal = new GregorianCalendar(ano, mes, dia);
+
+        return dataFinal;
     }
 
 
@@ -937,8 +952,9 @@ public class AppMain {
 
                             Veiculo veiculoSinistro = null;
 
-                            System.out.println("Digite a data");
-                            String data = scanner.nextLine();
+                            Calendar dataSinistroCalendar = leData();
+                            String dataSinistroString = Datas.converteCalendarParaString(dataSinistroCalendar);
+                            
                             System.out.println("Digite o endereço");
                             String endereco = scanner.nextLine();
                             System.out.println("Digite a placa do veículo");
@@ -956,7 +972,7 @@ public class AppMain {
                                 if (veiculoSinistro == null) {
                                     System.out.println("Veículo não encontrado na frota seguradad");
                                 } else {
-                                    seguroSinistro.gerarSinistro(data, endereco, seguroSinistro, veiculoSinistro, condutorSinistro);
+                                    seguroSinistro.gerarSinistro(dataSinistroString, endereco, seguroSinistro, veiculoSinistro, condutorSinistro);
                                     System.out.println("Sinistro gerado com sucesso");
                                 }
 
@@ -966,7 +982,7 @@ public class AppMain {
 
                                 veiculoSinistro = ((SeguroPF)seguroSinistro).getVeiculo();
     
-                                seguroSinistro.gerarSinistro(data, endereco, seguroSinistro, veiculoSinistro, condutorSinistro);
+                                seguroSinistro.gerarSinistro(dataSinistroString, endereco, seguroSinistro, veiculoSinistro, condutorSinistro);
                                 System.out.println("Sinistro gerado com sucesso");
                                 
                             }

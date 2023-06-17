@@ -11,7 +11,7 @@ import Clientes.Cliente;
 public abstract class Seguro {
     private final int id;
     private Calendar dataInicio;
-    private Calendar dataFim = null;
+    private Calendar dataFim = null; //data de fim começa sendo null porque o seguro não tem fim ainda. A partir do momento que o seguro for finalizado, uma data de fim é instanciada
     private Seguradora seguradora;
     private Map<Integer, Sinistro> listaSinistros = new HashMap<Integer, Sinistro>(); //o id do sinistro é a chave, o sinistro é o valor
     private ArrayList<Condutor> listaCondutoresAutorizados = new ArrayList<Condutor>();
