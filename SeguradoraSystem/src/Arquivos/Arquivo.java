@@ -1,5 +1,4 @@
 package Arquivos;
-
 public interface Arquivo {
     
     public boolean gravarArquivo();

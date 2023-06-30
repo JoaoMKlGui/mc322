@@ -32,6 +32,11 @@ public class Datas {
     }
 
     public static String converteCalendarParaString(Calendar data) {
+
+        if (data == null) {
+            return "Data não especificada";
+        }
+
         String dia = String.valueOf(data.get(Calendar.DAY_OF_MONTH));
         String mes = String.valueOf(data.get(Calendar.MONTH + 1));
         String ano = String.valueOf(data.get(Calendar.YEAR));

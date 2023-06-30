@@ -83,7 +83,7 @@ public abstract class Cliente {
     public String visualizarVeiculos() {
         String veiculos = "";
         for(Veiculo veiculo : listaVeiculos) {
-            veiculos = veiculo + veiculo.getModelo() + "\n"; //poderia utilizar o toString, mas como o cliente já sabe como cada carro que ele possui é, então pego só o modelo para facilitar
+            veiculos = veiculo + veiculo.getPlaca() + "\n"; //poderia utilizar o toString, mas como o cliente já sabe como cada carro que ele possui é, então pego só o modelo para facilitar
         }
 
         return veiculos;

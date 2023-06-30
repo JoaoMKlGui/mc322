@@ -1,9 +1,11 @@
 package Main;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Random;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
+import Arquivos.ArquivoClientePF;
 import Auxiliares.Datas;
 import Auxiliares.Validacao;
 
@@ -148,7 +150,7 @@ public class AppMain {
         System.out.println("Digite a placa");
         String placa = scanner.nextLine();
 
-        Veiculo novoVeiculo = new Veiculo(placa, marca, modelo, anoDeFabricacao);
+        Veiculo novoVeiculo = new Veiculo(placa);
         
 
         return novoVeiculo;
@@ -220,8 +222,8 @@ public class AppMain {
         ClientePJ clientePJ = new ClientePJ("Oficina Simas Turbo", "Unicamp", dataLicenca, "fundamental", "masculino", "alta", "55.889.662/0001-56", data2, 100, seguradoraPreCadastrado);
         seguradoraPreCadastrado.cadastrarCliente(clientePJ);
         seguradoraPreCadastrado.cadastrarCliente(clientePF);
-        Veiculo veiculo1 = new Veiculo("FDP-0000", "Ford", "Mustang Shelby", 2020);
-        Veiculo veiculo2 = new Veiculo("OFF-0000", "Ford", "Maverick", 1975);
+        Veiculo veiculo1 = new Veiculo("FDP-0000");
+        Veiculo veiculo2 = new Veiculo("OFF-0000");
         clientePF.adicionarVeiculo(veiculo1);
         clientePJ.adicionarVeiculo(veiculo2);
     
@@ -230,6 +232,16 @@ public class AppMain {
 
         for(Cliente cliente : seguradoraPreCadastrado.listarClientes()) {
             System.out.println(cliente);
+        }
+
+        System.out.println("Digite o caminho");
+        String caminho = scanner.nextLine();
+
+        String dados = ArquivoClientePF.lerArquivo(caminho);
+        ArrayList<ClientePF> clientes = ArquivoClientePF.transformarDadosParaObjetos(dados);
+
+        for (ClientePF cliente : clientes) {
+            System.out.println(cliente.toString());
         }
 
         System.out.println(seguradoraPreCadastrado.calcularReceita());
@@ -393,7 +405,8 @@ public class AppMain {
                             System.out.println("Digite o nome da nova frota ser cadastrada");
 
                             String nomeNovaFrota = scanner.nextLine();
-                            Frota novaFrota = new Frota(nomeNovaFrota);
+                            Random random = new Random();
+                            Frota novaFrota = new Frota(random.nextInt(0, 2000000000));
 
                             ((ClientePJ) clienteFrota).cadastrarFrota(novaFrota); 
 
@@ -438,11 +451,12 @@ public class AppMain {
 
                             System.out.println("Digite o código da frota");
 
-                            String codigoFrota = scanner.nextLine();
+                            int codigoFrota = scanner.nextInt();
+                            lixo = scanner.nextLine();
                             Frota frotaAtualizacao = null;
 
                             for(Frota frota : ((ClientePJ)clienteFrota).getListaFrotas()) {
-                                if (frota.getCode().equals(codigoFrota)) {
+                                if (frota.getCode() == codigoFrota) {
                                     frotaAtualizacao = frota;
                                     break;
                                 }
@@ -463,7 +477,7 @@ public class AppMain {
                                 int anoFab = scanner.nextInt();
                                 lixo = scanner.nextLine();
 
-                                Veiculo veiculoNovo = new Veiculo(placa, marca, modelo, anoFab);
+                                Veiculo veiculoNovo = new Veiculo(placa);
 
                                 frotaAtualizacao.adicionarVeiculo(veiculoNovo);
                                 System.out.println("Veículo adicionado com sucesso");
@@ -731,11 +745,12 @@ public class AppMain {
                         } else {
 
                             System.out.println("Digite o código da frota");
-                            String codigoFrota = scanner.nextLine();
+                            int codigoFrota = scanner.nextInt();
+                            lixo = scanner.nextLine();
                             Frota frotaListar = null;
                             
                             for (Frota frota : ((ClientePJ)clienteListar).getListaFrotas()) {
-                                if (frota.getCode().equals(codigoFrota)) {
+                                if (frota.getCode() == codigoFrota) {
                                     frotaListar = frota;
                                     break;
                                 }
@@ -1207,12 +1222,13 @@ public class AppMain {
                                 System.out.println("Cliente não encontrado, verifique os dados");
                             } else {
                                 System.out.println("Digite o código da frota que você deseja segurar");
-                                String codeFrota = scanner.nextLine();
+                                int codeFrota = scanner.nextInt();
+                                lixo = scanner.nextLine();
 
                                 Frota frotaSegurar = null;
 
                                 for (Frota frota : ((ClientePJ)clienteSeguro).getListaFrotas()) {
-                                    if (frota.getCode().equals(codeFrota)) {
+                                    if (frota.getCode() == codeFrota) {
                                         frotaSegurar = frota;
                                         break;
                                     }

@@ -2,28 +2,18 @@ package Main;
 import java.util.ArrayList;
 
 public class Frota {
-    private final String code;
-    private final String nomeFrota;
+    int code;
     private ArrayList<Veiculo> listaVeiculos = new ArrayList<Veiculo>();
 
-    public Frota(String nome) {
-        this.nomeFrota = nome;
-        this.code = geradorHashCode(nome);
-    }
-    
-    private String geradorHashCode(String nomeFrota) {
-        return Integer.toString(nomeFrota.hashCode());
-    }
-
-    public String getNomeFrota() {
-        return this.nomeFrota;
+    public Frota(int code) {
+        this.code = code;
     }
 
     public ArrayList<Veiculo> getListaVeiculos() {
         return listaVeiculos;
     }
 
-    public String getCode() {
+    public int getCode() {
         return this.code;
     }
     
@@ -36,6 +26,6 @@ public class Frota {
     }
 
     public String toString() {
-        return "Código: " + this.code + "\n" + "Nome Frota: " + this.nomeFrota + "\n";
+        return "Código: " + this.code + "\n";
     }
 }
